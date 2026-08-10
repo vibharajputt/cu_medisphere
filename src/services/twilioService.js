@@ -1,8 +1,8 @@
 import api from './api';
 
-const getSid = () => import.meta.env.VITE_TWILIO_ACCOUNT_SID || ['ACfcc55c926026a0bf8e3da4c0', 'b7b6b2e'].join('');
-const getToken = () => import.meta.env.VITE_TWILIO_AUTH_TOKEN || ['9a52078fc68b7250a8b', '0eaefe3c6b5a4'].join('');
-const getPhone = () => import.meta.env.VITE_TWILIO_PHONE_NUMBER || '+18167506748';
+const getSid = () => import.meta.env.VITE_TWILIO_ACCOUNT_SID || 'AC_MOCK_TWILIO_ACCOUNT_SID';
+const getToken = () => import.meta.env.VITE_TWILIO_AUTH_TOKEN || 'MOCK_TWILIO_AUTH_TOKEN';
+const getPhone = () => import.meta.env.VITE_TWILIO_PHONE_NUMBER || '+18005550199';
 
 export const TWILIO_CONFIG = {
   accountSid: getSid(),
