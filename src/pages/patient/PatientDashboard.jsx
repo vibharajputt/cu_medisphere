@@ -4979,7 +4979,7 @@ function MainDashboardPanel(props) {
             </div>
           ) : sidebarTab === 'wellness-center' ? (
             <div style={{ background: '#ffffff', borderRadius: '12px', padding: '24px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <MentalHealthWellnessTab _studentProfileData={_studentProfileData} user={user} _currAuthProfile={_currAuthProfile} fetchBookings={fetchBookings} navigate={navigate} setSidebarTab={setSidebarTab} _currSelectedTab={wellnessActiveSubTab} _switchTabState={setWellnessActiveSubTab} />
+              <MentalHealthWellnessTab profileData={_studentProfileData} user={user} activeProfile={_currAuthProfile} fetchBookings={fetchBookings} navigate={navigate} setSidebarTab={setSidebarTab} activeTab={wellnessActiveSubTab} setActiveTab={setWellnessActiveSubTab} />
             </div>
           ) : sidebarTab === 'emergency' ? (
             <div style={{ background: '#ffffff', borderRadius: '12px', padding: '24px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
