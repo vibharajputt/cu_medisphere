@@ -279,6 +279,7 @@ export const vaccinationAPI = {
   getVaccines: withMockFallback(() => api.get('/vaccines'), mockDb.vaccination.getVaccines),
   getPatientVaccinations: withMockFallback((patientId) => api.get(`/vaccinations/patient${patientId ? `?patientId=${patientId}` : ''}`), mockDb.vaccination.getPatientVaccinations),
   bookVaccination: withMockFallback((data) => api.post('/vaccinations/book', data), mockDb.vaccination.bookVaccination),
+  cancelVaccination: withMockFallback((recordId) => api.post(`/vaccinations/cancel/${recordId}`), mockDb.vaccination.cancelVaccination),
 };
 
 export const campAPI = {

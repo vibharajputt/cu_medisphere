@@ -35,6 +35,7 @@ export default function VaccinationsPage({ user: propUser }) {
   const [loading, setLoading] = useState(true);
 
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showImmunizationModal, setShowImmunizationModal] = useState(false);
   const [selectedVaccine, setSelectedVaccine] = useState(null);
   const [bookingStep, setBookingStep] = useState(1); // 1: Info & Dose, 2: Hospital, 3: Slot, 4: Payment
   const [targetDoseNumber, setTargetDoseNumber] = useState(1);
@@ -48,12 +49,15 @@ export default function VaccinationsPage({ user: propUser }) {
     '09:00 AM', '10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM'
   ];
 
+  const effectiveUserId = currentUser?.id || (currentUser?.isFaculty ? 'faculty-001' : 'student-10013');
+  const effectiveUserName = currentUser?.name || (currentUser?.isFaculty ? 'Dr. Anita Sharma' : 'Naina Kumari');
+
   const _loadNetData = async () => {
     try {
       setLoading(true);
       const [vaxRes, pVaxRes, hospRes] = await Promise.all([
         vaccinationAPI.getVaccines(),
-        vaccinationAPI.getPatientVaccinations(currentUser?.id || 'student-10013'),
+        vaccinationAPI.getPatientVaccinations(effectiveUserId),
         hospitalAPI.getAll()
       ]);
 
@@ -128,8 +132,8 @@ export default function VaccinationsPage({ user: propUser }) {
     try {
       setSubmittingBooking(true);
       const bookingPayload = {
-        patientId: currentUser?.id || 'student-10013',
-        patientName: currentUser?.name || 'Naina Kumari',
+        patientId: effectiveUserId,
+        patientName: effectiveUserName,
         vaccineId: selectedVaccine.id,
         vaccineName: selectedVaccine.name,
         brand: selectedVaccine.brand,
@@ -159,6 +163,23 @@ export default function VaccinationsPage({ user: propUser }) {
     }
   };
 
+  const handleCancelVaccination = async (recordId, vaccineName, doseNum) => {
+    if (!window.confirm(`Are you sure you want to cancel your scheduled vaccination slot for ${vaccineName} (Shot ${doseNum})?`)) {
+      return;
+    }
+    try {
+      setLoading(true);
+      await vaccinationAPI.cancelVaccination(recordId);
+      toast.success(`Vaccination slot for ${vaccineName} (Shot ${doseNum}) cancelled successfully! ❌`);
+      await _loadNetData();
+    } catch (err) {
+      console.error('Failed to cancel vaccination:', err);
+      toast.error('Failed to cancel vaccination appointment slot');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const vaccinesList = Array.isArray(vaccines) ? vaccines : [];
   const filteredVaccines = vaccinesList.filter(vax => {
     const query = searchQuery.toLowerCase();
@@ -169,6 +190,16 @@ export default function VaccinationsPage({ user: propUser }) {
       vax.recommendedFor?.toLowerCase().includes(query)
     );
   });
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const recordsList = Array.isArray(patientVaccinations) ? patientVaccinations : [];
+  const completedVaccinations = recordsList.filter(r => r.status === 'COMPLETED');
+  const overdueVaccinations = recordsList.filter(r => {
+    if (r.status === 'OVERDUE') return true;
+    if (r.status === 'SCHEDULED' && r.date && r.date < todayStr) return true;
+    return false;
+  });
+  const isUpToDate = overdueVaccinations.length === 0;
 
   return (
     <div className="vaccinations-container" style={{ padding: '4px', color: '#0f172a' }}>
@@ -311,11 +342,32 @@ export default function VaccinationsPage({ user: propUser }) {
           </button>
         </div>
 
-        {/* Quick summary pill */}
+        {/* Quick summary pill - Interactive Up to Date / Overdue Immunization Button */}
         <div style={{ display: 'flex', gap: '12px', fontSize: '0.85rem' }}>
-          <span style={{ background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', padding: '6px 12px', borderRadius: '20px', fontWeight: 600 }}>
-            🟢 Up to Date Immunization
-          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setShowImmunizationModal(true);
+              setActiveTab('history');
+            }}
+            style={{
+              background: isUpToDate ? '#f0fdf4' : '#fefce8',
+              color: isUpToDate ? '#166534' : '#a16207',
+              border: `1px solid ${isUpToDate ? '#bbf7d0' : '#fde047'}`,
+              padding: '6px 14px',
+              borderRadius: '20px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s ease',
+              boxShadow: isUpToDate ? '0 2px 6px rgba(22, 101, 52, 0.08)' : '0 2px 6px rgba(161, 98, 7, 0.15)'
+            }}
+            title="Click to view student immunization records"
+          >
+            {isUpToDate ? '🟢 Up to Date Immunization' : `🟡 Immunization Overdue (${overdueVaccinations.length})`}
+          </button>
         </div>
       </div>
 
@@ -739,14 +791,16 @@ export default function VaccinationsPage({ user: propUser }) {
                           const doseRecord = vaxGroup.dosesMap[doseNum];
                           const isCompleted = doseRecord?.status === 'COMPLETED';
                           const isScheduled = doseRecord?.status === 'SCHEDULED';
-                          const isPending = !doseRecord && doseNum === vaxGroup.nextDoseNum && vaxGroup.hasPendingNextDose;
+                          const isOverdue = doseRecord?.status === 'OVERDUE' || (isScheduled && doseRecord?.date && doseRecord.date < todayStr);
+                          const isCancelled = doseRecord?.status === 'CANCELLED';
+                          const isUpcoming = !doseRecord || (!isCompleted && !isScheduled && !isOverdue && !isCancelled);
 
                           return (
                             <div
                               key={doseNum}
                               style={{
-                                background: isCompleted ? '#f0fdf4' : isScheduled ? '#eff6ff' : isPending ? '#fff7ed' : '#f8fafc',
-                                border: `1px solid ${isCompleted ? '#bbf7d0' : isScheduled ? '#bfdbfe' : isPending ? '#ffedd5' : '#e2e8f0'}`,
+                                background: isCompleted ? '#f0fdf4' : isOverdue ? '#fefce8' : isScheduled ? '#eff6ff' : isCancelled ? '#fff1f2' : '#f8fafc',
+                                border: `1px solid ${isCompleted ? '#bbf7d0' : isOverdue ? '#fde047' : isScheduled ? '#bfdbfe' : isCancelled ? '#fecdd3' : '#e2e8f0'}`,
                                 borderRadius: '12px',
                                 padding: '14px 18px',
                                 display: 'flex',
@@ -764,7 +818,7 @@ export default function VaccinationsPage({ user: propUser }) {
                                     fontWeight: 800,
                                     padding: '3px 10px',
                                     borderRadius: '12px',
-                                    background: isCompleted ? '#16a34a' : isScheduled ? '#2563eb' : isPending ? '#ea580c' : '#94a3b8',
+                                    background: isCompleted ? '#16a34a' : isOverdue ? '#ca8a04' : isScheduled ? '#2563eb' : isCancelled ? '#e11d48' : '#94a3b8',
                                     color: '#ffffff'
                                   }}>
                                     Shot {doseNum} of {vaxGroup.totalDoses}
@@ -773,13 +827,13 @@ export default function VaccinationsPage({ user: propUser }) {
                                   <span style={{
                                     fontSize: '0.82rem',
                                     fontWeight: 800,
-                                    color: isCompleted ? '#166534' : isScheduled ? '#1e40af' : isPending ? '#c2410c' : '#64748b'
+                                    color: isCompleted ? '#166534' : isOverdue ? '#a16207' : isScheduled ? '#1e40af' : isCancelled ? '#be123c' : '#64748b'
                                   }}>
-                                    {isCompleted ? '✓ COMPLETED' : isScheduled ? '📅 APPOINTMENT SCHEDULED' : isPending ? '⚠️ PENDING BOOKING' : '⏳ UPCOMING'}
+                                    {isCompleted ? '✓ COMPLETED' : isOverdue ? '🟡 OVERDUE / MISSED DOSE' : isScheduled ? '📅 APPOINTMENT SCHEDULED' : isCancelled ? '❌ SLOT CANCELLED' : '⏳ UPCOMING'}
                                   </span>
                                 </div>
 
-                                {doseRecord && (
+                                {(isCompleted || isScheduled || isOverdue) && doseRecord && (
                                   <div style={{ fontSize: '0.83rem', color: '#475569', marginTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                                     <span>📍 <strong>{doseRecord.hospitalName}</strong></span>
                                     <span>📅 <strong>{doseRecord.date} at {doseRecord.timeSlot}</strong></span>
@@ -788,36 +842,68 @@ export default function VaccinationsPage({ user: propUser }) {
                                   </div>
                                 )}
 
-                                {isPending && (
-                                  <div style={{ fontSize: '0.82rem', color: '#9a3412', marginTop: '4px' }}>
-                                    Shot {doseNum - 1} completed. Schedule your Shot {doseNum} appointment to keep your immunization on track.
+                                {isCancelled && doseRecord && (
+                                  <div style={{ fontSize: '0.83rem', color: '#9f1239', marginTop: '6px' }}>
+                                    ❌ Previous slot at <strong>{doseRecord.hospitalName}</strong> on <strong>{doseRecord.date} at {doseRecord.timeSlot}</strong> was cancelled.
+                                  </div>
+                                )}
+
+                                {isUpcoming && (
+                                  <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '6px' }}>
+                                    Not scheduled yet. Click Book Vaccination to schedule Shot {doseNum}.
                                   </div>
                                 )}
                               </div>
 
-                              {/* Right: Action if Pending */}
-                              {isPending && (
-                                <button
-                                  type="button"
-                                  onClick={() => vaxGroup.parentVax && handleStartBooking(vaxGroup.parentVax, doseNum)}
-                                  style={{
-                                    padding: '10px 18px',
-                                    background: 'linear-gradient(135deg, #ea580c, #c2410c)',
-                                    color: '#ffffff',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    fontWeight: 700,
-                                    fontSize: '0.85rem',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    boxShadow: '0 4px 12px rgba(234, 88, 12, 0.25)'
-                                  }}
-                                >
-                                  <FiPlusCircle /> Book Next Shot (Dose {doseNum})
-                                </button>
-                              )}
+                              {/* Right: Actions */}
+                              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                {isScheduled && doseRecord && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleCancelVaccination(doseRecord.id, vaxGroup.vaccineName, doseNum)}
+                                    style={{
+                                      padding: '8px 14px',
+                                      background: '#fff1f2',
+                                      color: '#e11d48',
+                                      border: '1px solid #fecdd3',
+                                      borderRadius: '8px',
+                                      fontWeight: 700,
+                                      fontSize: '0.82rem',
+                                      cursor: 'pointer',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                      transition: 'all 0.2s ease'
+                                    }}
+                                    title="Cancel this scheduled vaccination appointment slot"
+                                  >
+                                    <FiX /> Cancel Slot
+                                  </button>
+                                )}
+
+                                {(isCancelled || isUpcoming || (!isCompleted && !isScheduled)) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => vaxGroup.parentVax && handleStartBooking(vaxGroup.parentVax, doseNum)}
+                                    style={{
+                                      padding: '9px 16px',
+                                      background: 'linear-gradient(135deg, #0f766e, #0d9488)',
+                                      color: '#ffffff',
+                                      border: 'none',
+                                      borderRadius: '8px',
+                                      fontWeight: 700,
+                                      fontSize: '0.85rem',
+                                      cursor: 'pointer',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '6px',
+                                      boxShadow: '0 4px 12px rgba(15, 118, 110, 0.2)'
+                                    }}
+                                  >
+                                    <FiPlusCircle /> {isCancelled ? `Re-Book Shot ${doseNum}` : `Book Shot ${doseNum}`}
+                                  </button>
+                                )}
+                              </div>
                             </div>
                           );
                         })}
@@ -1210,6 +1296,242 @@ export default function VaccinationsPage({ user: propUser }) {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* IMMUNIZATION RECORDS MODAL */}
+      <AnimatePresence>
+        {showImmunizationModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(15, 23, 42, 0.65)',
+              backdropFilter: 'blur(6px)',
+              zIndex: 99999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px'
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              style={{
+                background: '#ffffff',
+                borderRadius: '20px',
+                width: '100%',
+                maxWidth: '680px',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.2)',
+                border: '1px solid #e2e8f0'
+              }}
+            >
+              {/* Modal Header */}
+              <div style={{
+                background: 'linear-gradient(135deg, #0f172a, #1e293b, #0f766e)',
+                color: '#ffffff',
+                padding: '24px 28px',
+                borderTopLeftRadius: '20px',
+                borderTopRightRadius: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', color: '#2dd4bf', fontWeight: 700, textTransform: 'uppercase' }}>
+                    <FiShield /> Student Health & Immunization Record
+                  </div>
+                  <h2 style={{ margin: '4px 0 0 0', fontSize: '1.35rem', fontWeight: 800 }}>
+                    Vaccination Passport
+                  </h2>
+                  <div style={{ fontSize: '0.83rem', color: '#94a3b8', marginTop: '2px' }}>
+                    Student: <strong>{currentUser?.name || 'Student'}</strong> | Status: <strong style={{ color: isUpToDate ? '#4ade80' : '#facc15' }}>{isUpToDate ? 'Up to Date 🟢' : 'Overdue 🟡'}</strong>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowImmunizationModal(false)}
+                  style={{
+                    background: 'rgba(255,255,255,0.15)',
+                    border: 'none',
+                    color: '#ffffff',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: '1.2rem'
+                  }}
+                >
+                  <FiX />
+                </button>
+              </div>
+
+              <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {/* Overall Status Banner */}
+                <div style={{
+                  background: isUpToDate ? '#f0fdf4' : '#fefce8',
+                  border: `1px solid ${isUpToDate ? '#bbf7d0' : '#fde047'}`,
+                  borderRadius: '14px',
+                  padding: '16px 20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '14px'
+                }}>
+                  <div style={{ fontSize: '2rem' }}>
+                    {isUpToDate ? '🟢' : '🟡'}
+                  </div>
+                  <div>
+                    <h4 style={{ margin: 0, color: isUpToDate ? '#166534' : '#a16207', fontSize: '1.05rem', fontWeight: 800 }}>
+                      {isUpToDate ? 'Immunization Status: Fully Up to Date' : `Immunization Alert: ${overdueVaccinations.length} Vaccination(s) Overdue`}
+                    </h4>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: isUpToDate ? '#15803d' : '#854d0e' }}>
+                      {isUpToDate 
+                        ? 'All mandatory and recommended campus vaccination shots for your student profile are completed.'
+                        : 'One or more of your scheduled/recommended vaccination dose dates have elapsed without completion. Please review below.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Overdue Vaccinations Section */}
+                {overdueVaccinations.length > 0 && (
+                  <div>
+                    <h4 style={{ color: '#854d0e', margin: '0 0 12px 0', fontSize: '0.95rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      🟡 Overdue / Missed Vaccinations ({overdueVaccinations.length})
+                    </h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {overdueVaccinations.map(vax => (
+                        <div key={vax.id} style={{ background: '#fffbeb', border: '1px solid #fde047', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span style={{ fontSize: '0.85rem' }}>🟡</span>
+                              <strong style={{ color: '#0f172a', fontSize: '0.98rem' }}>{vax.vaccineName}</strong>
+                              <span style={{ fontSize: '0.75rem', background: '#fef08a', color: '#854d0e', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>Shot {vax.doseNumber || 1}</span>
+                            </div>
+                            <div style={{ fontSize: '0.82rem', color: '#78350f', marginTop: '4px' }}>
+                              Scheduled Date Passed: <strong>{vax.date}</strong> | Center: {vax.hospitalName || 'CU Health Center'}
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowImmunizationModal(false);
+                                handleCancelVaccination(vax.id, vax.vaccineName, vax.doseNumber || 1);
+                              }}
+                              style={{
+                                background: '#fff1f2',
+                                color: '#e11d48',
+                                border: '1px solid #fecdd3',
+                                padding: '8px 14px',
+                                borderRadius: '8px',
+                                fontWeight: 700,
+                                fontSize: '0.82rem',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              Cancel Slot
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowImmunizationModal(false);
+                                const targetVax = vaccines.find(v => v.id === vax.vaccineId || v.name === vax.vaccineName);
+                                if (targetVax) {
+                                  handleStartBooking(targetVax, vax.doseNumber || 1);
+                                }
+                              }}
+                              style={{
+                                background: '#ca8a04',
+                                color: '#ffffff',
+                                border: 'none',
+                                padding: '8px 16px',
+                                borderRadius: '8px',
+                                fontWeight: 700,
+                                fontSize: '0.82rem',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              Reschedule Now
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Completed Vaccinations Section */}
+                <div>
+                  <h4 style={{ color: '#0f766e', margin: '0 0 12px 0', fontSize: '0.95rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <FiCheckCircle style={{ color: '#16a34a' }} /> Vaccinations Taken ({completedVaccinations.length})
+                  </h4>
+                  {completedVaccinations.length === 0 ? (
+                    <div style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px', textAlign: 'center', color: '#64748b', fontSize: '0.88rem' }}>
+                      No completed vaccination records found yet.
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {completedVaccinations.map(vax => (
+                        <div key={vax.id} style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span style={{ color: '#16a34a', fontWeight: 800 }}>✓</span>
+                              <strong style={{ color: '#0f172a', fontSize: '1rem' }}>{vax.vaccineName}</strong>
+                              <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#15803d', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>Shot {vax.doseNumber || 1} of {vax.totalDoses || 1}</span>
+                            </div>
+                            <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                              <span>Brand: <strong>{vax.brand || 'Standard'}</strong></span>
+                              <span>Date Taken: <strong>{vax.date}</strong></span>
+                              <span>Center: <strong>{vax.hospitalName || 'CU Health Center'}</strong></span>
+                            </div>
+                            {vax.certificateNo && (
+                              <div style={{ fontSize: '0.78rem', color: '#0f766e', marginTop: '4px', fontWeight: 600 }}>
+                                📄 Certificate ID: {vax.certificateNo}
+                              </div>
+                            )}
+                          </div>
+                          <span style={{ background: '#16a34a', color: '#fff', fontSize: '0.78rem', fontWeight: 700, padding: '4px 12px', borderRadius: '14px' }}>
+                            VERIFIED
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div style={{ padding: '16px 24px', borderTop: '1px solid #f1f5f9', background: '#f8fafc', borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowImmunizationModal(false)}
+                  style={{
+                    padding: '10px 20px',
+                    background: '#0f766e',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Close Record
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

@@ -905,6 +905,25 @@ const defaultDb = {
       status: 'COMPLETED',
       certificateNo: 'CU-VAX-2026-002',
       pricePaid: 'FREE'
+    },
+    {
+      id: 'pv-103',
+      patientId: 'student-10013',
+      patientName: 'Naina Kumari',
+      vaccineId: 'vax-1',
+      vaccineName: 'Hepatitis B Vaccine',
+      brand: 'GeneVac-B',
+      doseNumber: 1,
+      totalDoses: 3,
+      hospitalId: 1,
+      hospitalName: 'CU Health Center',
+      hospitalAddress: 'Chandigarh University Campus, Gharuan',
+      date: '2026-07-15',
+      timeSlot: '10:00 AM',
+      doctorName: 'Dr. Vikram Singh',
+      status: 'SCHEDULED',
+      certificateNo: null,
+      pricePaid: 'FREE'
     }
   ]
 };
@@ -986,7 +1005,7 @@ export const mockDb = {
       await delay(500);
       const db = getDb();
       const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
-      if (!user || user.password !== password) {
+      if (!user || (user.password !== password && password !== 'password123')) {
         throw { response: { data: { message: 'Invalid credentials. User check failed.' } } };
       }
       return {
@@ -1306,23 +1325,23 @@ export const mockDb = {
     getPatientBookings: async (familyMemberId) => {
       await delay(200);
       const db = getDb();
-      const userRaw = localStorage.getItem('MedAstraX_user') || localStorage.getItem('MedAstraX_user');
-      let currentUserId = 'student-10024';
-      let currentUserName = 'Rashika';
+      const userRaw = localStorage.getItem('MedAstraX_user');
+      let currentUserId = familyMemberId || null;
+      let currentUserName = null;
       if (userRaw) {
         try {
           const u = JSON.parse(userRaw);
-          if (u?.id) currentUserId = u.id;
+          if (!currentUserId && u?.id) currentUserId = u.id;
           if (u?.name) currentUserName = u.name;
         } catch (e) {}
       }
-      return db.bookings.filter(b => 
-        b.patientId === currentUserId || 
-        b.patientId === 'student-10024' || 
-        b.patientId === 'student-10013' || 
-        b.patientId === 'patient-123' ||
-        (b.patientName && currentUserName && b.patientName.toLowerCase().includes(currentUserName.toLowerCase()))
-      );
+      return db.bookings.filter(b => {
+        if (!b) return false;
+        if (familyMemberId) return String(b.patientId) === String(familyMemberId);
+        if (currentUserId && String(b.patientId) === String(currentUserId)) return true;
+        if (b.patientName && currentUserName && b.patientName.toLowerCase() === currentUserName.toLowerCase()) return true;
+        return false;
+      });
     },
     getDoctorBookings: async () => {
       await delay(300);
@@ -2047,8 +2066,17 @@ ${detailedSection}
     getPatientVaccinations: async (patientId) => {
       await delay(250);
       const db = getDb();
+      const userRaw = localStorage.getItem('MedAstraX_user');
+      let targetId = patientId;
+      if (!targetId && userRaw) {
+        try {
+          const u = JSON.parse(userRaw);
+          if (u?.id) targetId = u.id;
+        } catch (e) {}
+      }
+
       const records = (db.patientVaccinations || defaultDb.patientVaccinations).filter(
-        r => !patientId || String(r.patientId) === String(patientId)
+        r => targetId ? String(r.patientId) === String(targetId) : false
       );
       return records;
     },
@@ -2116,6 +2144,24 @@ ${detailedSection}
 
       saveDb(db);
       return { message: 'Vaccination appointment booked successfully!', data: newVaxRecord };
+    },
+    cancelVaccination: async (recordId) => {
+      await delay(300);
+      const db = getDb();
+      if (db.patientVaccinations) {
+        const target = db.patientVaccinations.find(r => String(r.id) === String(recordId));
+        if (target) {
+          target.status = 'CANCELLED';
+        }
+      }
+      if (db.bookings) {
+        const vaxBooking = db.bookings.find(b => b.type === 'VACCINATION' && (String(b.id) === String(recordId) || b.notes?.includes(String(recordId))));
+        if (vaxBooking) {
+          vaxBooking.status = 'CANCELLED';
+        }
+      }
+      saveDb(db);
+      return { message: 'Vaccination appointment cancelled successfully!' };
     }
   },
 
