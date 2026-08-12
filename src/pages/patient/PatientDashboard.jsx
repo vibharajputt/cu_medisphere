@@ -4555,7 +4555,7 @@ function MainDashboardPanel(props) {
             <FiMenu />
           </button>
           <div className="cuims-logo-container" onClick={() => setSidebarTab('hospitals')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <img src={logo} alt="MedAstraX" style={{ height: '52px', objectFit: 'contain', filter: 'hue-rotate(150deg) saturate(2.5) brightness(1.05)' }} />
+            <img src={logo} alt="MedAstraQ" style={{ height: '52px', objectFit: 'contain' }} />
           </div>
         </div>
 

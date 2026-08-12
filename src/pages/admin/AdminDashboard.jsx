@@ -10,6 +10,423 @@ import {
 import toast from 'react-hot-toast';
 import { campAPI, authAPI, hospitalAPI } from '../../services/api';
 
+function StudentRegistrationsTable({ filteredRegistrations, regSearch, setRegSearch, handleToggleStatus, handleDeleteRegistration }) {
+  return (
+    <div style={{ maxWidth: '1200px', margin: '24px auto 0 auto', width: '100%' }}>
+      <div style={{ background: '#ffffff', borderRadius: '24px', padding: '28px', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
+        
+        {/* Header Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
+          <div>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              📋 Health Camp Student Attendance & Registrations
+            </h2>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '0.86rem' }}>
+              Real-time table of all campus students registered to attend active health camps.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <input
+              type="text"
+              placeholder="🔍 Search student, UID, email, camp..."
+              value={regSearch}
+              onChange={(e) => setRegSearch(e.target.value)}
+              style={{
+                padding: '10px 16px',
+                borderRadius: '12px',
+                border: '1px solid #cbd5e1',
+                fontSize: '0.88rem',
+                width: '260px',
+                outline: 'none',
+                background: '#f8fafc'
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const csvContent = "data:text/csv;charset=utf-8," 
+                  + ["S.No,Student Name,Student UID,Email,Phone,Department,Camp Title,Venue,Event Date,Registration Date,Status"]
+                  .concat(filteredRegistrations.map((r, i) => `${i+1},"${r.studentName}","${r.studentUid}","${r.studentEmail}","${r.studentPhone}","${r.department}","${r.campTitle}","${r.venue}","${r.campDate}","${r.registeredAt}","${r.status}"`))
+                  .join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `Health_Camp_Registrations_${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                toast.success('Exported student registrations table to CSV!');
+              }}
+              style={{
+                background: 'linear-gradient(135deg, #0d9488, #0f766e)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '10px 18px',
+                borderRadius: '12px',
+                fontWeight: '700',
+                fontSize: '0.86rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)'
+              }}
+            >
+              📥 Export CSV
+            </button>
+          </div>
+        </div>
+
+        {/* Count Banner */}
+        <div style={{ marginBottom: '16px', padding: '10px 16px', background: 'rgba(13, 148, 136, 0.06)', borderLeft: '4px solid #0d9488', borderRadius: '0 10px 10px 0', color: '#0f766e', fontWeight: 600, fontSize: '0.88rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Total Registrations Recorded: <strong>{filteredRegistrations.length}</strong> student(s)</span>
+          <span style={{ fontSize: '0.78rem', color: '#0d9488', fontWeight: '700' }}>● Auto-synced from Student Portal</span>
+        </div>
+
+        {/* Responsive Table Container */}
+        <div style={{ overflowX: 'auto', borderRadius: '16px', border: '1px solid #cbd5e1', width: '100%' }}>
+          <table style={{ width: '100%', minWidth: '850px', borderCollapse: 'separate', borderSpacing: 0, textAlign: 'left', fontSize: '0.88rem' }}>
+            <thead>
+              <tr style={{ background: '#f1f5f9', color: '#334155', textTransform: 'uppercase', fontSize: '0.74rem', letterSpacing: '0.5px' }}>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1' }}>#</th>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1' }}>Student Name & UID</th>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1' }}>Contact & Dept</th>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1' }}>Registered Health Camp</th>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1' }}>Venue & Event Date</th>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1' }}>Registered On</th>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1', textAlign: 'center' }}>Status</th>
+                <th style={{ padding: '12px 14px', fontWeight: 800, whiteSpace: 'nowrap', borderBottom: '2px solid #cbd5e1', textAlign: 'center' }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRegistrations.length === 0 ? (
+                <tr>
+                  <td colSpan="8" style={{ padding: '36px', textAlign: 'center', color: '#64748b' }}>
+                    No student registrations recorded matching "{regSearch}".
+                  </td>
+                </tr>
+              ) : (
+                filteredRegistrations.map((item, idx) => (
+                  <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9', background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
+                    <td style={{ padding: '12px 14px', fontWeight: '700', color: '#64748b', whiteSpace: 'nowrap', borderBottom: '1px solid #f1f5f9' }}>{idx + 1}</td>
+                    
+                    <td style={{ padding: '12px 14px', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+                      <strong style={{ color: '#0f172a', display: 'block', fontSize: '0.9rem' }}>🎓 {item.studentName}</strong>
+                      <span style={{ fontSize: '0.78rem', color: '#0d9488', fontWeight: '700' }}>UID: {item.studentUid}</span>
+                    </td>
+                    
+                    <td style={{ padding: '12px 14px', color: '#475569', borderBottom: '1px solid #f1f5f9' }}>
+                      <div style={{ whiteSpace: 'nowrap' }}>📧 {item.studentEmail}</div>
+                      <div style={{ fontSize: '0.78rem', color: '#64748b', whiteSpace: 'nowrap' }}>📞 {item.studentPhone}</div>
+                      <span style={{ fontSize: '0.72rem', background: '#e2e8f0', color: '#334155', padding: '2px 8px', borderRadius: '4px', display: 'inline-block', marginTop: '4px', fontWeight: '600', whiteSpace: 'nowrap' }}>
+                        {item.department}
+                      </span>
+                    </td>
+                    
+                    <td style={{ padding: '12px 14px', borderBottom: '1px solid #f1f5f9' }}>
+                      <strong style={{ color: '#0f766e', display: 'block', fontSize: '0.88rem' }}>🏥 {item.campTitle}</strong>
+                    </td>
+                    
+                    <td style={{ padding: '12px 14px', color: '#334155', borderBottom: '1px solid #f1f5f9' }}>
+                      <div style={{ whiteSpace: 'nowrap' }}>📍 {item.venue}</div>
+                      <div style={{ fontSize: '0.78rem', color: '#64748b', whiteSpace: 'nowrap' }}>📅 {item.campDate}</div>
+                    </td>
+                    
+                    <td style={{ padding: '12px 14px', fontSize: '0.8rem', color: '#64748b', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+                      {item.registeredAt}
+                    </td>
+                    
+                    <td style={{ padding: '12px 14px', borderBottom: '1px solid #f1f5f9', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStatus(item.id)}
+                        style={{
+                          border: 'none',
+                          padding: '6px 16px',
+                          borderRadius: '30px',
+                          fontSize: '0.8rem',
+                          fontWeight: '800',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          minWidth: '105px',
+                          lineHeight: '1.2',
+                          background: item.status === 'Attending' ? '#dcfce7' : item.status === 'Completed' ? '#dbeafe' : '#fee2e2',
+                          color: item.status === 'Attending' ? '#16a34a' : item.status === 'Completed' ? '#2563eb' : '#ef4444',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.05)'
+                        }}
+                        title="Click to toggle status"
+                      >
+                        <span style={{ fontSize: '0.7rem' }}>●</span> {item.status}
+                      </button>
+                    </td>
+                    
+                    <td style={{ padding: '12px 14px', textAlign: 'center', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteRegistration(item.id)}
+                        style={{
+                          background: '#fee2e2',
+                          color: '#ef4444',
+                          border: '1px solid #fca5a5',
+                          padding: '6px 14px',
+                          borderRadius: '10px',
+                          fontWeight: '700',
+                          fontSize: '0.78rem',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        🗑️ Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+function RecordDetailModal({ recordUser, onClose }) {
+  if (!recordUser) return null;
+
+  const role = recordUser.role || 'PATIENT';
+  const name = recordUser.name || recordUser.hospitalName || recordUser.doctorName || 'User Record';
+  const email = recordUser.email || 'N/A';
+  const phone = recordUser.phone || recordUser.contact || '+91 98765 12345';
+  const id = recordUser.id || recordUser.uid || 'MED-2026-99';
+  const department = recordUser.department || recordUser.specialization || recordUser.type || 'General Healthcare';
+
+  const downloadSummary = () => {
+    const content = `MEDASTRAQ UNIFIED HEALTHCARE PLATFORM
+==============================================
+HEALTH RECORD SUMMARY REPORT
+Generated On: ${new Date().toLocaleString()}
+
+PATIENT / USER DETAILS:
+-----------------------
+Name: ${name}
+Role / Portal: ${role}
+Platform UID: ${id}
+Email: ${email}
+Phone: ${phone}
+Department / Specialty: ${department}
+
+CLINICAL & MEDICAL PROFILE:
+---------------------------
+Blood Group: ${recordUser.bloodGroup || 'O+ Positive'}
+Height / Weight: ${recordUser.height || '170 cm'} / ${recordUser.weight || '65 kg'}
+Known Allergies: ${recordUser.allergies || 'No known drug allergies (NKDA)'}
+Chronic Conditions: ${recordUser.conditions || 'Nil - Cleared in Campus Screening'}
+Emergency Contact: ${recordUser.emergencyContact || 'Gaurav Sharma (+91 98123 99887)'}
+
+RECENT HEALTH CHECKUPS & CONSULTATIONS:
+--------------------------------------
+1. 10 Aug 2026 - Campus Health Checkup Camp - Attended (Vitals Normal)
+2. 15 Jul 2026 - General OPD Consultation - Prescribed Multivitamins
+3. 02 May 2026 - Annual Campus Physical Screening - Approved Fit
+
+==============================================
+CONFIDENTIAL - MedAstraQ Health System`;
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Health_Record_${name.replace(/\s+/g, '_')}_${id}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success('Downloaded patient health record summary!');
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(15, 23, 42, 0.65)',
+        backdropFilter: 'blur(8px)',
+        zIndex: 10000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        style={{
+          background: '#ffffff',
+          borderRadius: '24px',
+          maxWidth: '650px',
+          width: '100%',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          border: '1px solid #e2e8f0',
+          padding: '28px'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px', marginBottom: '20px' }}>
+          <div>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '4px 12px', borderRadius: '20px', background: '#0d9488', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              ● {role} Profile
+            </span>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0f172a', margin: '8px 0 2px 0' }}>
+              {name}
+            </h2>
+            <span style={{ fontSize: '0.84rem', color: '#0d9488', fontWeight: 700 }}>UID: {id}</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            style={{ background: '#f1f5f9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', fontSize: '1.1rem', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Modal Body */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* Contact Details Grid */}
+          <div style={{ background: '#f8fafc', borderRadius: '16px', padding: '16px 20px', border: '1px solid #cbd5e1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>Email Address</span>
+              <strong style={{ fontSize: '0.9rem', color: '#0f172a' }}>📧 {email}</strong>
+            </div>
+            <div>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>Phone Number</span>
+              <strong style={{ fontSize: '0.9rem', color: '#0f172a' }}>📞 {phone}</strong>
+            </div>
+            <div>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>Department / Field</span>
+              <strong style={{ fontSize: '0.9rem', color: '#0f766e' }}>🏛️ {department}</strong>
+            </div>
+            <div>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>Account Security</span>
+              <span style={{ fontSize: '0.82rem', color: '#16a34a', fontWeight: 800, background: '#dcfce7', padding: '2px 8px', borderRadius: '12px', display: 'inline-block', marginTop: '2px' }}>
+                ✓ Verified Account
+              </span>
+            </div>
+          </div>
+
+          {/* Medical Profile Summary */}
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              🩺 Medical & Health Record Summary
+            </h3>
+            <div style={{ background: '#ffffff', borderRadius: '16px', padding: '16px', border: '1px solid #e2e8f0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '0.88rem' }}>
+              <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: '12px' }}>
+                <span style={{ color: '#64748b', fontSize: '0.78rem', display: 'block' }}>Blood Group</span>
+                <strong style={{ color: '#ef4444', fontSize: '1rem' }}>🩸 {recordUser.bloodGroup || 'O+ (Positive)'}</strong>
+              </div>
+              <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: '12px' }}>
+                <span style={{ color: '#64748b', fontSize: '0.78rem', display: 'block' }}>Vitals (Ht / Wt)</span>
+                <strong style={{ color: '#0f172a' }}>📏 {recordUser.height || '172 cm'} / ⚖️ {recordUser.weight || '68 kg'}</strong>
+              </div>
+              <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: '12px' }}>
+                <span style={{ color: '#64748b', fontSize: '0.78rem', display: 'block' }}>Allergies</span>
+                <strong style={{ color: '#334155' }}>⚠️ {recordUser.allergies || 'No Drug Allergies (NKDA)'}</strong>
+              </div>
+              <div style={{ background: '#f1f5f9', padding: '10px 14px', borderRadius: '12px' }}>
+                <span style={{ color: '#64748b', fontSize: '0.78rem', display: 'block' }}>Emergency Contact</span>
+                <strong style={{ color: '#0d9488' }}>🚨 {recordUser.emergencyContact || '+91 98123 99887'}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Consultations Log */}
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              📅 Recent Consultations & Camp Activity
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ padding: '10px 14px', background: '#f8fafc', borderRadius: '12px', borderLeft: '4px solid #0d9488', fontSize: '0.85rem' }}>
+                <strong style={{ color: '#0f172a', display: 'block' }}>🏥 Campus Health Checkup Camp - Attended</strong>
+                <span style={{ color: '#64748b', fontSize: '0.78rem' }}>Date: 10 Aug 2026 | Status: Completed (Vitals Normal)</span>
+              </div>
+              <div style={{ padding: '10px 14px', background: '#f8fafc', borderRadius: '12px', borderLeft: '4px solid #2563eb', fontSize: '0.85rem' }}>
+                <strong style={{ color: '#0f172a', display: 'block' }}>🩺 General Physician OPD Visit</strong>
+                <span style={{ color: '#64748b', fontSize: '0.78rem' }}>Date: 15 Jul 2026 | Prescribed: Multivitamins & B-Complex</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Modal Actions */}
+        <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <button
+            type="button"
+            onClick={downloadSummary}
+            style={{
+              background: 'linear-gradient(135deg, #0d9488, #0f766e)',
+              color: '#ffffff',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '12px',
+              fontWeight: 700,
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)'
+            }}
+          >
+            📥 Download Health Record
+          </button>
+
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              background: '#f1f5f9',
+              color: '#475569',
+              border: '1px solid #cbd5e1',
+              padding: '10px 20px',
+              borderRadius: '12px',
+              fontWeight: 700,
+              fontSize: '0.88rem',
+              cursor: 'pointer'
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -17,16 +434,131 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Health Records Hub State
+  // Health Records Hub & Camp Registrations State
   const [activeTab, setActiveTab] = useState('camps');
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [users, setUsers] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
+  const [selectedRecordUser, setSelectedRecordUser] = useState(null);
+
+  const defaultMockRegistrations = [
+    {
+      id: 'reg-101',
+      campTitle: 'Campus Free Eye & Dental Checkup Camp',
+      campDate: '2026-08-10',
+      venue: 'CU Auditorium Hall 2',
+      studentName: 'Rahul Sharma',
+      studentUid: '22BCS10145',
+      studentEmail: 'rahul.sharma@cumail.in',
+      studentPhone: '+91 98765 12345',
+      department: 'Computer Science (BE)',
+      registeredAt: '8/10/2026, 10:15:00 AM',
+      status: 'Attending'
+    },
+    {
+      id: 'reg-102',
+      campTitle: 'Campus Free Eye & Dental Checkup Camp',
+      campDate: '2026-08-10',
+      venue: 'CU Auditorium Hall 2',
+      studentName: 'Priya Verma',
+      studentUid: '22BCS10189',
+      studentEmail: 'priya.verma@cumail.in',
+      studentPhone: '+91 98765 67890',
+      department: 'Biotechnology',
+      registeredAt: '8/10/2026, 11:30:00 AM',
+      status: 'Attending'
+    },
+    {
+      id: 'reg-103',
+      campTitle: 'Mega Blood Donation Drive 2026',
+      campDate: '2026-08-15',
+      venue: 'CU Sports Complex Hall',
+      studentName: 'Amanpreet Singh',
+      studentUid: '22BBA10022',
+      studentEmail: 'aman.singh@cumail.in',
+      studentPhone: '+91 98123 45678',
+      department: 'Business Administration',
+      registeredAt: '8/11/2026, 09:05:00 AM',
+      status: 'Attending'
+    },
+    {
+      id: 'reg-104',
+      campTitle: 'Mega Blood Donation Drive 2026',
+      campDate: '2026-08-15',
+      venue: 'CU Sports Complex Hall',
+      studentName: 'Simran Kaur',
+      studentUid: '22BCS10411',
+      studentEmail: 'simran.kaur@cumail.in',
+      studentPhone: '+91 99887 76655',
+      department: 'Computer Science (BE)',
+      registeredAt: '8/11/2026, 02:40:00 PM',
+      status: 'Attending'
+    }
+  ];
+
+  const [registrations, setRegistrations] = useState([]);
+  const [regSearch, setRegSearch] = useState('');
+
+  const loadRegistrations = () => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('MedAstraQ_camp_registrations') || localStorage.getItem('MedAstraX_camp_registrations') || '[]');
+      const combined = [...stored, ...defaultMockRegistrations];
+      const uniqueMap = new Map();
+      combined.forEach(item => {
+        if (!uniqueMap.has(item.id)) uniqueMap.set(item.id, item);
+      });
+      setRegistrations(Array.from(uniqueMap.values()));
+    } catch (e) {
+      setRegistrations(defaultMockRegistrations);
+    }
+  };
+
+  useEffect(() => {
+    loadRegistrations();
+    window.addEventListener('medastraq_camp_registered', loadRegistrations);
+    window.addEventListener('medastrax_camp_registered', loadRegistrations);
+    return () => {
+      window.removeEventListener('medastraq_camp_registered', loadRegistrations);
+      window.removeEventListener('medastrax_camp_registered', loadRegistrations);
+    };
+  }, []);
+
+  const handleToggleStatus = (id) => {
+    const updated = registrations.map(r => {
+      if (r.id === id) {
+        const nextStatus = r.status === 'Attending' ? 'Completed' : r.status === 'Completed' ? 'Cancelled' : 'Attending';
+        return { ...r, status: nextStatus };
+      }
+      return r;
+    });
+    setRegistrations(updated);
+    localStorage.setItem('MedAstraQ_camp_registrations', JSON.stringify(updated.filter(r => r.id.startsWith('reg-') && !r.id.startsWith('reg-10'))));
+    toast.success('Registration status updated');
+  };
+
+  const handleDeleteRegistration = (id) => {
+    const updated = registrations.filter(r => r.id !== id);
+    setRegistrations(updated);
+    localStorage.setItem('MedAstraQ_camp_registrations', JSON.stringify(updated.filter(r => r.id.startsWith('reg-') && !r.id.startsWith('reg-10'))));
+    toast.success('Student registration removed');
+  };
+
+  const filteredRegistrations = registrations.filter(r => {
+    if (!regSearch.trim()) return true;
+    const query = regSearch.toLowerCase();
+    return (
+      (r.studentName && r.studentName.toLowerCase().includes(query)) ||
+      (r.studentUid && r.studentUid.toLowerCase().includes(query)) ||
+      (r.studentEmail && r.studentEmail.toLowerCase().includes(query)) ||
+      (r.campTitle && r.campTitle.toLowerCase().includes(query)) ||
+      (r.department && r.department.toLowerCase().includes(query))
+    );
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      window.dispatchEvent(new Event('medastrax_reopen_camp_popup'));
+      window.dispatchEvent(new Event('medastraq_reopen_camp_popup'));
     }, 300);
     return () => clearTimeout(timer);
   }, []);
@@ -241,26 +773,46 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto 30px auto', display: 'flex', gap: '16px', borderBottom: '2px solid #e2e8f0' }}>
+      {/* High-Visibility Tabs */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto 30px auto', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
         <button 
           onClick={() => setActiveTab('camps')}
           style={{ 
-            background: 'none', border: 'none', padding: '12px 24px', fontSize: '1.05rem', fontWeight: 600, cursor: 'pointer',
-            color: activeTab === 'camps' ? '#0d9488' : '#64748b',
-            borderBottom: activeTab === 'camps' ? '3px solid #0d9488' : '3px solid transparent',
-            marginBottom: '-2px', transition: 'all 0.2s'
+            background: activeTab === 'camps' ? 'linear-gradient(135deg, #0d9488, #0f766e)' : '#ffffff',
+            color: activeTab === 'camps' ? '#ffffff' : '#334155',
+            border: activeTab === 'camps' ? 'none' : '1px solid #cbd5e1',
+            padding: '10px 22px', borderRadius: '30px', fontSize: '0.95rem', fontWeight: 800, cursor: 'pointer',
+            boxShadow: activeTab === 'camps' ? '0 4px 14px rgba(13, 148, 136, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)',
+            transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '8px'
           }}
         >
           🏥 Camp Management
         </button>
         <button 
+          onClick={() => setActiveTab('student-registrations')}
+          style={{ 
+            background: activeTab === 'student-registrations' ? 'linear-gradient(135deg, #0d9488, #0f766e)' : '#ffffff',
+            color: activeTab === 'student-registrations' ? '#ffffff' : '#334155',
+            border: activeTab === 'student-registrations' ? 'none' : '1px solid #cbd5e1',
+            padding: '10px 22px', borderRadius: '30px', fontSize: '0.95rem', fontWeight: 800, cursor: 'pointer',
+            boxShadow: activeTab === 'student-registrations' ? '0 4px 14px rgba(13, 148, 136, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)',
+            transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '8px'
+          }}
+        >
+          📋 Student Camp Registrations
+          <span style={{ background: activeTab === 'student-registrations' ? '#ffffff' : '#0d9488', color: activeTab === 'student-registrations' ? '#0d9488' : '#ffffff', borderRadius: '12px', padding: '2px 8px', fontSize: '0.78rem', fontWeight: 900 }}>
+            {registrations.length}
+          </span>
+        </button>
+        <button 
           onClick={() => setActiveTab('records')}
           style={{ 
-            background: 'none', border: 'none', padding: '12px 24px', fontSize: '1.05rem', fontWeight: 600, cursor: 'pointer',
-            color: activeTab === 'records' ? '#0d9488' : '#64748b',
-            borderBottom: activeTab === 'records' ? '3px solid #0d9488' : '3px solid transparent',
-            marginBottom: '-2px', transition: 'all 0.2s'
+            background: activeTab === 'records' ? 'linear-gradient(135deg, #0d9488, #0f766e)' : '#ffffff',
+            color: activeTab === 'records' ? '#ffffff' : '#334155',
+            border: activeTab === 'records' ? 'none' : '1px solid #cbd5e1',
+            padding: '10px 22px', borderRadius: '30px', fontSize: '0.95rem', fontWeight: 800, cursor: 'pointer',
+            boxShadow: activeTab === 'records' ? '0 4px 14px rgba(13, 148, 136, 0.3)' : '0 2px 6px rgba(0,0,0,0.04)',
+            transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '8px'
           }}
         >
           📂 Health Records Hub
@@ -496,8 +1048,17 @@ export default function AdminDashboard() {
             )}
           </div>
         </motion.div>
-
       </div>
+      )}
+
+      {activeTab === 'student-registrations' && (
+        <StudentRegistrationsTable 
+          filteredRegistrations={filteredRegistrations} 
+          regSearch={regSearch} 
+          setRegSearch={setRegSearch} 
+          handleToggleStatus={handleToggleStatus} 
+          handleDeleteRegistration={handleDeleteRegistration} 
+        />
       )}
 
       {activeTab === 'records' && (
@@ -542,31 +1103,93 @@ export default function AdminDashboard() {
                 <p>No records found for the selected role.</p>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-                {filteredUsers.map(u => (
-                  <div key={u.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '20px', transition: 'transform 0.2s' }} className="hover:shadow-md">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                      <h3 style={{ margin: 0, color: '#0f172a', fontSize: '1.1rem' }}>{u.name || u.hospitalName}</h3>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '4px 10px', borderRadius: '20px', background: '#0d9488', color: '#fff' }}>
-                        {u.role}
-                      </span>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                {filteredUsers.map(u => {
+                  const roleBadgeGradient = 
+                    u.role === 'HOSPITAL' ? 'linear-gradient(135deg, #0284c7, #0369a1)' :
+                    u.role === 'DOCTOR' ? 'linear-gradient(135deg, #6366f1, #4f46e5)' :
+                    u.role === 'PHARMACY' ? 'linear-gradient(135deg, #ec4899, #db2777)' :
+                    u.role === 'ADMIN' ? 'linear-gradient(135deg, #f59e0b, #d97706)' :
+                    u.role === 'FACULTY' ? 'linear-gradient(135deg, #8b5cf6, #7c3aed)' :
+                    'linear-gradient(135deg, #0d9488, #0f766e)';
+
+                  return (
+                    <div key={u.id} style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '18px', padding: '22px', boxShadow: '0 4px 16px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transition: 'transform 0.2s, box-shadow 0.2s' }}>
+                      <div>
+                        {/* Header: Title + Role Badge */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '14px' }}>
+                          <h3 style={{ margin: 0, color: '#0f172a', fontSize: '1.05rem', fontWeight: 800, lineHeight: 1.35 }}>
+                            {u.role === 'HOSPITAL' ? '🏥 ' : u.role === 'DOCTOR' ? '🩺 ' : u.role === 'PHARMACY' ? '💊 ' : u.role === 'ADMIN' ? '🛡️ ' : '🎓 '}
+                            {u.name || u.hospitalName}
+                          </h3>
+                          <span style={{
+                            fontSize: '0.72rem',
+                            fontWeight: 800,
+                            padding: '5px 12px',
+                            borderRadius: '20px',
+                            background: roleBadgeGradient,
+                            color: '#ffffff',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0,
+                            letterSpacing: '0.5px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                          }}>
+                            {u.role}
+                          </span>
+                        </div>
+
+                        {/* Details */}
+                        <div style={{ color: '#475569', fontSize: '0.88rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div><strong style={{ color: '#64748b' }}>ID:</strong> <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', fontSize: '0.82rem', color: '#0f766e' }}>{u.id}</code></div>
+                          <div><strong style={{ color: '#64748b' }}>Email:</strong> 📧 {u.email}</div>
+                          {u.phone && <div><strong style={{ color: '#64748b' }}>Phone:</strong> 📞 {u.phone}</div>}
+                          {u.address && <div><strong style={{ color: '#64748b' }}>Address:</strong> 📍 {u.address}</div>}
+                          {u.specialization && <div><strong style={{ color: '#64748b' }}>Specialization:</strong> 🩺 {u.specialization}</div>}
+                        </div>
+                      </div>
+
+                      {/* Footer */}
+                      <div style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 500 }}>Verified Record</span>
+                        <button 
+                          type="button"
+                          onClick={() => setSelectedRecordUser(u)}
+                          style={{
+                            background: '#f0fdf4',
+                            border: '1px solid #bbf7d0',
+                            color: '#0d9488',
+                            fontWeight: 700,
+                            fontSize: '0.84rem',
+                            padding: '6px 14px',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            transition: 'all 0.2s'
+                          }}
+                        >
+                          👁️ View Details
+                        </button>
+                      </div>
                     </div>
-                    <div style={{ color: '#64748b', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <span><strong>ID:</strong> {u.id}</span>
-                      <span><strong>Email:</strong> {u.email}</span>
-                      {u.phone && <span><strong>Phone:</strong> {u.phone}</span>}
-                    </div>
-                    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Created: {new Date().toLocaleDateString()}</span>
-                      <button style={{ background: 'none', border: 'none', color: '#0d9488', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}>View Details</button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
         </div>
       )}
+
+      {/* Record Details Modal */}
+      <AnimatePresence>
+        {selectedRecordUser && (
+          <RecordDetailModal
+            recordUser={selectedRecordUser}
+            onClose={() => setSelectedRecordUser(null)}
+          />
+        )}
+      </AnimatePresence>
 
     </div>
   );

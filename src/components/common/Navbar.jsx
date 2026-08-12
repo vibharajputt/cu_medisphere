@@ -643,7 +643,7 @@ export default function Navbar() {
       <nav className="navbar">
       <div className="navbar-container">
         <Link to={isAuthenticated ? '/dashboard' : '/'} className="navbar-brand brand-glow" onClick={() => handleNavLinkClick('/')}>
-          <img src={logo} alt="MedAstraX Logo" className="navbar-logo-img" style={{ height: '56px', objectFit: 'contain', filter: 'hue-rotate(150deg) saturate(2.5) brightness(1.05)' }} />
+          <img src={logo} alt="MedAstraQ Logo" className="navbar-logo-img" style={{ height: '56px', objectFit: 'contain' }} />
         </Link>
 
         {/* Desktop Right Navigation & Actions */}

@@ -339,7 +339,7 @@ export default function LoginPage() {
         {/* Header */}
         <div className="auth-header">
           <Link to="/" className="auth-logo">
-            <img src={logo} alt="MedAstraX Logo" className="auth-logo-img" style={{ height: '140px', objectFit: 'contain', filter: 'hue-rotate(150deg) saturate(2.5) brightness(1.05)' }} />
+            <img src={logo} alt="MedAstraQ Logo" className="auth-logo-img" style={{ height: '140px', objectFit: 'contain' }} />
           </Link>
           <h1 className="auth-title">Welcome Back</h1>
           <p className="auth-subtitle">Sign in to continue to your health portal</p>

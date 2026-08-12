@@ -253,9 +253,36 @@ function HealthCampPopupModal() {
 
   const handleRegister = () => {
     if (camp?.id) {
-      localStorage.setItem('MedAstraX_registered_camp_' + camp.id, 'true');
-      localStorage.setItem('MedAstraX_dismissed_camp_' + camp.id, 'true');
-      sessionStorage.setItem('MedAstraX_dismissed_camp_' + camp.id, 'true');
+      localStorage.setItem('MedAstraQ_registered_camp_' + camp.id, 'true');
+      localStorage.setItem('MedAstraQ_dismissed_camp_' + camp.id, 'true');
+      sessionStorage.setItem('MedAstraQ_dismissed_camp_' + camp.id, 'true');
+
+      const userRaw = localStorage.getItem('MedAstraX_user') || localStorage.getItem('MedAstraQ_user');
+      const currentUser = userRaw ? JSON.parse(userRaw) : null;
+
+      const newRegistration = {
+        id: 'reg-' + Date.now(),
+        campId: camp.id,
+        campTitle: camp.title,
+        campDate: camp.date,
+        venue: camp.venue,
+        studentName: currentUser?.name || 'Rahul Sharma (Student)',
+        studentEmail: currentUser?.email || 'student.22bcs10145@cumail.in',
+        studentUid: currentUser?.id || '22BCS10145',
+        studentPhone: currentUser?.phone || '+91 98765 43210',
+        department: 'Computer Science & Engineering',
+        registeredAt: new Date().toLocaleString(),
+        status: 'Attending'
+      };
+
+      try {
+        const existing = JSON.parse(localStorage.getItem('MedAstraQ_camp_registrations') || '[]');
+        existing.unshift(newRegistration);
+        localStorage.setItem('MedAstraQ_camp_registrations', JSON.stringify(existing));
+        window.dispatchEvent(new Event('medastraq_camp_registered'));
+      } catch (err) {
+        console.error('Failed to save student camp registration', err);
+      }
     }
     toast.success(`You are successfully registered for "${camp.title}"! 🎉`, { duration: 5000 });
     setIsOpen(false);

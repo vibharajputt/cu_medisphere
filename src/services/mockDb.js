@@ -159,7 +159,7 @@ const defaultDb = {
       email: 'naina24bcf10013@cuchd.in',
       password: 'password123',
       role: 'PATIENT',
-      phone: '9876543210',
+      phone: '9817512192',
       avatarUrl: '',
       dob: '2006-09-21',
       age: 19,
@@ -946,9 +946,29 @@ function getDb() {
       if (!existing) {
         db.users.push(defaultUser);
         modified = true;
-      } else if (defaultUser.avatarUrl && existing.avatarUrl !== defaultUser.avatarUrl) {
-        existing.avatarUrl = defaultUser.avatarUrl;
-        modified = true;
+      } else {
+        if (defaultUser.id === 'student-10013' && existing.phone !== '9817512192') {
+          existing.phone = '9817512192';
+          existing.emergencyNumber = '9817512192';
+          modified = true;
+        }
+        if (defaultUser.avatarUrl && existing.avatarUrl !== defaultUser.avatarUrl) {
+          existing.avatarUrl = defaultUser.avatarUrl;
+          modified = true;
+        }
+      }
+    });
+
+    ['MedAstraX_user', 'MedAstraQ_user'].forEach(key => {
+      const savedUserStr = localStorage.getItem(key);
+      if (savedUserStr) {
+        try {
+          const savedU = JSON.parse(savedUserStr);
+          if (savedU?.id === 'student-10013' || savedU?.email?.includes('10013')) {
+            savedU.phone = '9817512192';
+            localStorage.setItem(key, JSON.stringify(savedU));
+          }
+        } catch (e) {}
       }
     });
     defaultDb.hospitals.forEach(h => {
@@ -1897,9 +1917,30 @@ ${donts.map(item => `- ${item}`).join('\n')}
       return { sessionId: 'mock-session-new' };
     },
     queryChat: async (message, sessionId) => {
-      await delay(500);
+      await delay(400);
+      const q = (message || '').toLowerCase().trim();
+
+      let reply = '';
+
+      if (q.includes('register') || q.includes('sign up') || q.includes('signup') || q.includes('account') || q.includes('create')) {
+        reply = `📝 **How to Register an Account on MedAstraQ:**\n\nMedAstraQ supports role-based accounts for Students, Faculty, Doctors, Hospitals, and Pharmacies:\n\n1. **Student / Faculty Account:**\n   - Go to the [Sign Up Page](/signup).\n   - Enter your Name, Email (\`@cuchd.in\`), Mobile Number, and Password.\n   - Select your role as **Student** or **Faculty** and enter your College UID.\n   - Click **Create Account** to log in instantly!\n\n2. **Doctor / Hospital / Pharmacy Account:**\n   - On the [Sign Up Page](/signup), select **Doctor**, **Hospital**, or **Pharmacy**.\n   - Provide your License / Registration Number for instant verification.\n   - Fill in your facility details to unlock your dedicated portal!\n\n3. **Already Have an Account?**\n   - Click [Log In](/login) to enter your credentials and access your dashboard.`;
+      } else if (q.includes('login') || q.includes('log in') || q.includes('sign in')) {
+        reply = `🔐 **How to Log In to MedAstraQ:**\n\n1. Visit the [Login Page](/login).\n2. Enter your registered email (e.g. \`student@cuchd.in\`) and password.\n3. Click **Sign In** to navigate to your portal dashboard.\n\n*Tip: You can also ask me "login as doctor" or "login as admin" to test different roles instantly!*`;
+      } else if (q.includes('book') || q.includes('appointment') || q.includes('doctor') || q.includes('slot') || q.includes('consult')) {
+        reply = `📅 **How to Book a Doctor Appointment:**\n\n1. **Select Hospital / Health Center:**\n   - Go to [Dashboard](/dashboard) and browse available centers like **CU Health Center** or **Max Hospital**.\n2. **Choose Specialist:**\n   - Pick your doctor (e.g., **Dr. Aditya Sharma** - General Physician).\n3. **Select Date & Time Slot:**\n   - Choose your preferred date and slot (e.g., \`09:00 AM - 10:00 AM\`).\n4. **Consultation Mode:**\n   - Choose **In-Person Visit** or **Online Tele-consultation** (Google Meet).\n5. **Confirmation:**\n   - Click **Confirm Booking** to receive instant confirmation & digital token!`;
+      } else if (q.includes('medicine') || q.includes('pharmacy') || q.includes('buy') || q.includes('order') || q.includes('dawai') || q.includes('prescription')) {
+        reply = `💊 **How to Order Medicines & View Prescriptions:**\n\n1. **Digital Prescriptions:**\n   - Access your [My Prescriptions](/dashboard?tab=prescriptions) tab to view active digital prescriptions issued by campus doctors.\n2. **Order from Astra Pharmacy:**\n   - Click **Order Medicines** to send your prescription directly to **Astra Pharmacy**.\n3. **Delivery & Pickup:**\n   - Track real-time order status, stock availability, and campus doorstep delivery right from your dashboard!`;
+      } else if (q.includes('camp') || q.includes('event') || q.includes('blood') || q.includes('checkup')) {
+        reply = `🏥 **Campus Health Camps & Broadcasts:**\n\n1. **Live Announcements:**\n   - Look for the floating **🏥 Health Camp** icon at the top header of any page.\n2. **View & Register:**\n   - Click **Attend / Register Interest** on active camps (e.g. *Campus Free Eye & Dental Checkup Camp* or *Mega Blood Donation Drive*).\n3. **Admin Attendance Sync:**\n   - Your student UID & contact details are auto-synced to the Admin Attendance Table for event check-in!`;
+      } else if (q.includes('reward') || q.includes('point') || q.includes('exp') || q.includes('streak') || q.includes('coin') || q.includes('badge')) {
+        reply = `🏆 **MedAstraQ Health Rewards & EXP Program:**\n\n1. **Daily Checklist:**\n   - Mark your daily health checklist (Meds, Balanced Diet, 15-min Exercise) on your [Dashboard](/dashboard).\n2. **Earn MedCoins:**\n   - Complete health goals to earn +20 to +150 MedCoins & unlock badges like *Gold Health Champion*!\n3. **Leaderboard:**\n   - View top campus performers on the [Health Rewards Leaderboard](/dashboard?tab=rewards).`;
+      } else {
+        reply = `💡 **MedAstraQ Platform Guide:**\n\nRegarding your query about "${message}":\n\n- 📅 **Book Appointments:** Browse doctors & book slots on the [Dashboard](/dashboard).\n- 📝 **Register & Accounts:** Create Student, Faculty, Doctor, or Hospital accounts on [Sign Up](/signup).\n- 💊 **Prescriptions & Medicines:** Order prescribed medicines via [My Prescriptions](/dashboard?tab=prescriptions).\n- 🏥 **Health Camps:** Check active health drives using the header **🏥 Camp Icon**.\n- 🚨 **Emergency SOS:** Trigger instant 24/7 campus ambulance SOS on the [Emergency Portal](/emergency).\n\n*Feel free to ask specific questions about booking, medicines, camps, or login procedures!*`;
+      }
+
       return {
-        reply: `Here is a structured overview of your query regarding "${message}". Seek immediate medical attention if you experience severe symptoms like shortness of breath or high fever.`
+        reply,
+        sessionId: sessionId || 'mock-session-abc'
       };
     },
     resetQueryChat: async (sessionId) => {

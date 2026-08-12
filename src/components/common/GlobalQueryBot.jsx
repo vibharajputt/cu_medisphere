@@ -30,7 +30,7 @@ export default function GlobalQueryBot() {
   const [chatHistory, setChatHistory] = useState([
     {
       sender: 'ai',
-      text: '👋 **Welcome to MedAstraX!** I am your 24/7 Platform Assistant.\n\nI can help you with:\n- 📅 [Booking an appointment](/dashboard) with a doctor\n- 📝 [Creating an account](/signup) or [logging in](/login)\n- 💊 [Buying & ordering medicines](/my-prescriptions)\n- 🎙️ Using AI clinical tools or diagnostic bookings\n- 🩺 General health and wellness questions\n\n*How can I help you today? You can type your query or click the microphone button next to me to ask with your voice!*'
+      text: '👋 **Welcome to MedAstraQ!** I am your 24/7 Platform Assistant.\n\nI can help you with:\n- 📅 [Booking an appointment](/dashboard) with a doctor\n- 📝 [Creating an account](/signup) or [logging in](/login)\n- 💊 [Buying & ordering medicines](/my-prescriptions)\n- 🎙️ Using AI clinical tools or diagnostic bookings\n- 🩺 General health and wellness questions\n\n*How can I help you today? You can type your query or click the microphone button next to me to ask with your voice!*'
     }
   ]);
   const [sendingChat, setSendingChat] = useState(false);
@@ -407,7 +407,7 @@ export default function GlobalQueryBot() {
         <button 
           className={`global-chat-fab ${chatOpen ? 'open' : ''}`} 
           onClick={() => setChatOpen(!chatOpen)}
-          title="MedAstraX Platform Assistant"
+          title="MedAstraQ Platform Assistant"
         >
           {chatOpen ? (
             <FiX size={22} />
