@@ -174,7 +174,16 @@ export default function VoiceAssistant() {
       return;
     }
 
-    toast('Command not recognized. Please try again.', { icon: '🤔', duration: 3000 });
+    // Fallback: Route all health queries and general voice input to Astra AI Assistant
+    toast.success(`Processing with Astra AI: "${text}"`, { icon: '🤖', duration: 4000 });
+    
+    let spokenIntro = "Opening Astra AI Assistant for your query.";
+    if (text.includes('fever') || text.includes('cough') || text.includes('cold') || text.includes('headache') || text.includes('pain') || text.includes('sick') || text.includes('flu')) {
+      spokenIntro = "I hear you are experiencing health symptoms. Opening Astra AI Health Guide for you now.";
+    }
+    
+    speak(spokenIntro);
+    window.dispatchEvent(new CustomEvent('medastraq_voice_query', { detail: { query: text } }));
   };
 
   const toggleListen = () => {
