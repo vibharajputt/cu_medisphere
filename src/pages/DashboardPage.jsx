@@ -304,7 +304,23 @@ export default function DashboardPage() {
                     </div>
                     <div className="metric-box">
                       <span className="metric-lbl">Vaccinations</span>
-                      <span className="metric-val text-success">Up to date</span>
+                      {(() => {
+                        const todayStr = new Date().toISOString().split('T')[0];
+                        const dbStr = localStorage.getItem('MedAstraX_mock_db');
+                        let hasOverdue = false;
+                        if (dbStr) {
+                          try {
+                            const db = JSON.parse(dbStr);
+                            const vaxList = db.patientVaccinations || [];
+                            hasOverdue = vaxList.some(v => (v.patientId === 'student-10013' || v.patientId === user?.id) && (v.status === 'OVERDUE' || (v.status === 'SCHEDULED' && v.date && v.date < todayStr)));
+                          } catch (e) {}
+                        }
+                        return (
+                          <span className={hasOverdue ? "metric-val text-warning" : "metric-val text-success"} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            {hasOverdue ? "🟡 Overdue / Pending" : "🟢 Up to date"}
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
 

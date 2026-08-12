@@ -977,6 +977,14 @@ function getDb() {
     if (!db.patientVaccinations) {
       db.patientVaccinations = defaultDb.patientVaccinations;
       modified = true;
+    } else {
+      defaultDb.patientVaccinations.forEach(pv => {
+        const existing = db.patientVaccinations.find(item => item.id === pv.id);
+        if (!existing) {
+          db.patientVaccinations.push(pv);
+          modified = true;
+        }
+      });
     }
     if (db.notifications && !db.notifications.some(n => n.id === 'n-checkup')) {
       db.notifications.push(defaultDb.notifications.find(n => n.id === 'n-checkup'));
