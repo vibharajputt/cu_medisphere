@@ -53,7 +53,6 @@ public class BackgroundJobController {
         if (state == null) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Job not found"));
         }
-        if (!"FAILED".equals(state.status) && state.errorReason == null) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Only failed jobs can be retried"));
         }
         jobService.retryJob(jobId);

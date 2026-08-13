@@ -20,7 +20,7 @@ import {
 import { FaUserMd, FaUser, FaStore } from 'react-icons/fa';
 import doctorPatientImg from '../assets/university-students-hero.jpg';
 import drAdityaImg from '../assets/dr-aditya.png';
-import MedAstraQLogo from '../assets/medastrax-logo-new.png';
+import MedAstraXLogo from '../assets/medastrax-logo-new.png';
 import './LandingPage.css';
 import './ContactPage.css';
 
@@ -58,12 +58,12 @@ export default function LandingPage() {
 
   const cards = [
     {
-      title: "For Patients",
-      description: "Book appointments instantly. Choose between in-person hospital visits or remote video consultations, secure your slots, and manage your health records in a central dashboard.",
+      title: "For Students & Faculty",
+      description: "Book campus medical appointments instantly. Choose between in-person clinic visits or online consultations, request medical leaves, track campus wellness, and manage health records.",
       link: "/login",
       icon: <FaUser />,
       color: "var(--primary)",
-      actionText: "Access Patient Portal"
+      actionText: "Access Student & Faculty Portal"
     },
     {
       title: "For Doctors",
@@ -101,14 +101,14 @@ export default function LandingPage() {
           transition={{ duration: 0.8 }}
         >
           <span className="badge badge-primary hero-badge">
-            <span className="badge-dot"></span> UNIFIED HEALTHCARE PLATFORM
+            <span className="badge-dot"></span> UNIFIED CAMPUS HEALTHCARE PLATFORM
           </span>
           <h1 className="hero-title">
-            Care that connects.<br />
-            Technology that <span className="text-accent">heals.</span>
+            Campus Care that connects.<br />
+            Technology that <span className="text-accent">empowers.</span>
           </h1>
           <p className="hero-subtitle">
-            MedAstraQ bridges patients, doctors, and pharmacies together. Book appointments, manage records, and get care — all in one secure platform.
+            MedAstraQ seamlessly connects students, faculty, campus clinics, and doctors. Book appointments, manage medical leaves, access digital prescriptions, and track campus wellness — all in one secure platform.
           </p>
           <div className="hero-actions">
             <Link to="/login" className="btn btn-primary btn-lg">
@@ -127,7 +127,7 @@ export default function LandingPage() {
               </div>
               <div className="stat-info">
                 <span className="stat-number">10,000+</span>
-                <span className="stat-label">Patients Served</span>
+                <span className="stat-label">Students & Faculty</span>
               </div>
             </div>
             <div className="stat-item">
@@ -135,8 +135,8 @@ export default function LandingPage() {
                 <FaUserMd />
               </div>
               <div className="stat-info">
-                <span className="stat-number">500+</span>
-                <span className="stat-label">Doctors</span>
+                <span className="stat-number">50+</span>
+                <span className="stat-label">Campus Doctors</span>
               </div>
             </div>
             <div className="stat-item">
@@ -145,7 +145,7 @@ export default function LandingPage() {
               </div>
               <div className="stat-info">
                 <span className="stat-number">100+</span>
-                <span className="stat-label">Hospitals</span>
+                <span className="stat-label">Network Hospitals</span>
               </div>
             </div>
             <div className="stat-item">
@@ -154,7 +154,7 @@ export default function LandingPage() {
               </div>
               <div className="stat-info">
                 <span className="stat-number">24/7</span>
-                <span className="stat-label">Support</span>
+                <span className="stat-label">Campus SOS Care</span>
               </div>
             </div>
           </div>
@@ -354,16 +354,16 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="client-meta">
-              <h4 className="client-org">Oxford Hospital</h4>
+              <h4 className="client-org">Campus Health Center</h4>
               <span className="client-name">Dr. Aditya Sharma</span>
-              <span className="client-role">Chief Intervention Cardiologist & Diabetologist</span>
+              <span className="client-role">Chief Campus Medical Officer</span>
             </div>
           </div>
 
           <div className="testimonial-right">
             <div className="large-quote-icon">“</div>
             <p className="testimonial-quote-text">
-              "MedAstraQ is redefining how healthcare should work in India. Their innovative platforms like Hospital+ and DocAssist are not just improving operational efficiency but also bringing back the focus on patient care."
+              "MedAstraQ has completely transformed healthcare on our campus. From instant OPD bookings and digital medical leaves to AI symptom analysis, it makes health services seamless, fast, and accessible for both students and faculty."
             </p>
           </div>
         </motion.div>
@@ -387,7 +387,7 @@ export default function LandingPage() {
             Get in <span className="text-gradient">Touch!</span>
           </h2>
           <p className="contact-subtitle">
-            Make Your Hospital Smarter, Faster and Better with Improved Patient Experience and Efficiency.
+            Make Your Campus Health Center Smarter, Faster and Better with Improved Student & Faculty Wellness.
           </p>
           <p className="contact-reach">Reach out to us and we'll get back to you as soon as possible.</p>
         </motion.div>
@@ -412,7 +412,7 @@ export default function LandingPage() {
               <div className="info-icon-box info-icon-purple"><FiHeadphones /></div>
               <div className="info-text">
                 <h4>Support</h4>
-                <p>support@MedAstraQ.com<br />+91 79887XXXXX</p>
+                <p>support@medastraq.com<br />+91 79887XXXXX</p>
               </div>
             </div>
             <div className="contact-info-card glass-card">
@@ -489,7 +489,7 @@ export default function LandingPage() {
           {/* Brand Column */}
           <div className="footer-brand-col">
             <div className="footer-logo-row">
-              <img src={MedAstraQLogo} alt="MedAstraQ" className="footer-logo-img" style={{ height: '115px', objectFit: 'contain' }} />
+              <img src={MedAstraXLogo} alt="MedAstraQ" className="footer-logo-img" style={{ height: '115px', objectFit: 'contain' }} />
             </div>
             <p className="footer-tagline">Making Quality Healthcare Accessible for Every Family.</p>
             <div className="footer-social-row">

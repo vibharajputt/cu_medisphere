@@ -554,96 +554,107 @@ export default function MyPrescriptions() {
                   </div>
 
                   {/* Actions */}
-                  <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid var(--border-color)', gap: '10px', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '60px' }}>Rx #{typeof p.id === 'number' ? p.id : idx + 1}</span>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1 }}>
-                      {hasAttachment && (
-                        <a 
-                          href={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : ''}${attachmentUrl}`} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="btn btn-primary btn-sm"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none', padding: '6px 12px', height: '32px', fontSize: '0.8rem', borderRadius: '4px' }}
-                        >
-                          <FiFileText /> View File
-                        </a>
-                      )}
+                  <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
+                    {/* Top Action Row: Rx # + AI Report, Attach, Export PDF */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>Rx #{typeof p.id === 'number' ? p.id : idx + 1}</span>
                       
-                      <input 
-                        type="file" 
-                        id={`attach-file-${p.id}`} 
-                        style={{ display: 'none' }} 
-                        accept="image/*,.pdf" 
-                        onChange={(e) => handleAttachEvidence(p.id, e)} 
-                      />
-                      <button 
-                        onClick={() => document.getElementById(`attach-file-${p.id}`).click()}
-                        className="btn btn-outline btn-sm"
-                        disabled={uploadingAttachmentId === p.id}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', color: 'var(--primary)', borderColor: 'rgba(0,217,166,0.3)' }}
-                      >
-                        <FiPaperclip /> {uploadingAttachmentId === p.id ? 'Uploading...' : 'Attach'}
-                      </button>
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'nowrap', justifyContent: 'flex-end', flexShrink: 0 }}>
+                        {hasAttachment && (
+                          <a 
+                            href={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : ''}${attachmentUrl}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="btn btn-primary btn-sm"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none', padding: '6px 10px', height: '32px', fontSize: '0.8rem', borderRadius: '4px', whiteSpace: 'nowrap' }}
+                          >
+                            <FiFileText /> View File
+                          </a>
+                        )}
+                        
+                        <button 
+                          onClick={() => handleAnalyzePrescription(p.id)}
+                          className="btn btn-rx-action btn-sm"
+                          disabled={loadingAnalysisId === p.id}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', height: '32px', fontSize: '0.8rem', padding: '0 10px', whiteSpace: 'nowrap' }}
+                        >
+                          <FiCpu /> {loadingAnalysisId === p.id ? 'Analyzing...' : 'AI Report'}
+                        </button>
 
-                      <button 
-                        onClick={() => handleDownloadPDF(p)}
-                        className="btn btn-outline btn-sm"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', color: 'var(--primary)', borderColor: 'rgba(0,217,166,0.3)' }}
-                      >
-                        <FiDownload /> Export PDF
-                      </button>
+                        <input 
+                          type="file" 
+                          id={`attach-file-${p.id}`} 
+                          style={{ display: 'none' }} 
+                          accept="image/*,.pdf" 
+                          onChange={(e) => handleAttachEvidence(p.id, e)} 
+                        />
+                        <button 
+                          onClick={() => document.getElementById(`attach-file-${p.id}`).click()}
+                          className="btn btn-rx-action btn-sm"
+                          disabled={uploadingAttachmentId === p.id}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', height: '32px', fontSize: '0.8rem', padding: '0 10px', whiteSpace: 'nowrap' }}
+                        >
+                          <FiPaperclip /> {uploadingAttachmentId === p.id ? 'Uploading...' : 'Attach'}
+                        </button>
 
-                      {p.aiSummary && (
                         <button 
-                          onClick={() => {
-                            setSelectedLabSummary(p.aiSummary);
-                            setSelectedLabPatient(p.patientName || activeProfile?.name || 'Patient');
-                            setSelectedLabTests(p.tests ? (p.tests.startsWith('[') ? JSON.parse(p.tests).join(', ') : p.tests) : 'Diagnostics');
-                            setSummaryTab('patient');
-                          }}
-                          className="btn btn-outline btn-sm"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', color: 'var(--primary)', borderColor: 'rgba(0,217,166,0.3)' }}
+                          onClick={() => handleDownloadPDF(p)}
+                          className="btn btn-rx-action btn-sm"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', height: '32px', fontSize: '0.8rem', padding: '0 10px', whiteSpace: 'nowrap' }}
                         >
-                          <FiEye /> Lab Summary
+                          <FiDownload /> Export PDF
                         </button>
-                      )}
-                      <button 
-                        onClick={() => handleAnalyzePrescription(p.id)}
-                        className="btn btn-outline btn-sm"
-                        disabled={loadingAnalysisId === p.id}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem' }}
-                      >
-                        <FiCpu /> {loadingAnalysisId === p.id ? 'Analyzing...' : 'AI Report'}
-                      </button>
-                      {medicines.length > 0 && (
-                        <button 
-                          onClick={() => handleGetGenericAlternatives(p.id, medicines)}
-                          className="btn btn-outline btn-sm"
-                          disabled={loadingGenericId === p.id}
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', color: '#7c3aed', borderColor: 'rgba(124, 58, 237, 0.3)' }}
-                        >
-                          🧪 {loadingGenericId === p.id ? 'Analyzing...' : 'Generic Alternatives'}
-                        </button>
-                      )}
-                      {medicines.length > 0 && (
-                        <button 
-                          onClick={() => navigate(`/order-prescription/${p.id}`)}
-                          className="btn btn-primary btn-sm"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', background: 'var(--primary)', fontWeight: 700 }}
-                        >
-                          <FiShoppingBag size={13} /> Order Medicines
-                        </button>
-                      )}
-                      {tests.length > 0 && (
-                        <button 
-                          onClick={() => navigate(`/book-diagnostic/${p.id}`)}
-                          className="btn btn-primary btn-sm"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', background: '#ec4899', border: 'none', color: '#fff', fontWeight: 700 }}
-                        >
-                          <FiActivity size={13} /> Contact Diagnostic Lab
-                        </button>
-                      )}
+
+                        {p.aiSummary && (
+                          <button 
+                            onClick={() => {
+                              setSelectedLabSummary(p.aiSummary);
+                              setSelectedLabPatient(p.patientName || activeProfile?.name || 'Patient');
+                              setSelectedLabTests(p.tests ? (p.tests.startsWith('[') ? JSON.parse(p.tests).join(', ') : p.tests) : 'Diagnostics');
+                              setSummaryTab('patient');
+                            }}
+                            className="btn btn-rx-action btn-sm"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', height: '32px', fontSize: '0.8rem', padding: '0 10px', whiteSpace: 'nowrap' }}
+                          >
+                            <FiEye /> Lab Summary
+                          </button>
+                        )}
+                      </div>
                     </div>
+
+                    {/* Secondary Action Row: Generic Alternatives, Order Medicines, Contact Lab */}
+                    {(medicines.length > 0 || tests.length > 0) && (
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                        {medicines.length > 0 && (
+                          <button 
+                            onClick={() => handleGetGenericAlternatives(p.id, medicines)}
+                            className="btn btn-outline btn-sm"
+                            disabled={loadingGenericId === p.id}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', color: '#7c3aed', borderColor: 'rgba(124, 58, 237, 0.3)', borderRadius: '20px' }}
+                          >
+                            🧪 {loadingGenericId === p.id ? 'Analyzing...' : 'Generic Alternatives'}
+                          </button>
+                        )}
+                        {medicines.length > 0 && (
+                          <button 
+                            onClick={() => navigate(`/order-prescription/${p.id}`)}
+                            className="btn btn-primary btn-sm"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', background: 'var(--primary)', fontWeight: 700, borderRadius: '20px' }}
+                          >
+                            <FiShoppingBag size={13} /> Order Medicines
+                          </button>
+                        )}
+                        {tests.length > 0 && (
+                          <button 
+                            onClick={() => navigate(`/book-diagnostic/${p.id}`)}
+                            className="btn btn-primary btn-sm"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '32px', fontSize: '0.8rem', background: '#ec4899', border: 'none', color: '#fff', fontWeight: 700, borderRadius: '20px' }}
+                          >
+                            <FiActivity size={13} /> Contact Diagnostic Lab
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                 </motion.div>

@@ -129,7 +129,7 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            About <span className="brand-med">Med</span><span className="brand-astra">Astra</span><span className="brand-x">CU</span>
+            About <span className="text-gradient">MedAstraQ</span>
           </motion.h1>
           <motion.p 
             className="about-intro"
@@ -137,7 +137,7 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
-            An all-in-one healthcare platform that connects doctors, pharmacies, labs, and an AI health assistant — so booking, medicines, tests, recovery, and emergencies all happen in one place. Powered by AI, available in your language, and built to work even offline. Every family's 24/7 health friend.
+            An all-in-one campus healthcare platform that connects students, faculty, university clinics, pharmacies, and AI health assistants — making appointment bookings, medical leaves, digital prescriptions, emergency SOS, and campus wellness seamless in one place. Powered by AI, accessible anytime, and built to keep your campus healthy.
           </motion.p>
         </header>
 
@@ -147,10 +147,10 @@ export default function AboutPage() {
             <div className="mission-content">
               <h2 className="heading-md mission-heading">Our <span className="text-gradient">mission</span></h2>
               <p className="mission-text">
-                Our mission is to make quality healthcare reachable for every person — no matter where they live, what language they speak, or whether they have an internet connection.
+                Our mission is to empower student and faculty health across campus by making comprehensive medical care, mental wellness, and emergency response instantly accessible to everyone — anytime, anywhere.
               </p>
               <p className="mission-text">
-                We're uniting doctors, pharmacies, labs, and AI into one seamless platform, so getting care is never again slow, scattered, or out of reach. From a simple consultation to a life-saving emergency, we want every family to have trusted health support in their pocket, 24/7.
+                We are uniting campus health centers, doctors, pharmacies, diagnostic labs, and AI co-pilots into one seamless digital ecosystem. From routine doctor visits and digital medical leaves to 24/7 emergency SOS support, we ensure every student and faculty member receives trusted, proactive healthcare right at their fingertips.
               </p>
             </div>
             <div className="mission-graphic-box">

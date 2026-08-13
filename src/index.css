@@ -222,6 +222,24 @@ h1, h2, h3, h4, h5, h6, .heading-xl, .heading-lg, .heading-md, .heading-sm {
   color: #FFFFFF;
 }
 
+.btn-rx-action {
+  background: transparent;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.btn-rx-action:hover {
+  background: var(--primary, #d65313) !important;
+  color: #ffffff !important;
+  border-color: var(--primary, #d65313) !important;
+}
+
+.btn-rx-action:hover svg {
+  color: #ffffff !important;
+}
+
 .btn-ghost {
   background: #fdf2f8; /* pale pink */
   color: #831843;

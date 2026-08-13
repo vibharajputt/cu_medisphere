@@ -15,7 +15,6 @@ public class BackgroundJobService {
     public static class JobState {
         public String id;
         public String name;
-        public String status;
         public String result;
         public String errorReason;
         public long createdAt;
@@ -60,7 +59,6 @@ public class BackgroundJobService {
 
     public void retryJob(String jobId) {
         JobState state = jobStore.get(jobId);
-        if (state != null) {
             state.status = "PENDING";
             state.errorReason = null;
             processJobAsync(jobId);
