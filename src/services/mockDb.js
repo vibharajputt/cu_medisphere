@@ -396,54 +396,7 @@ const defaultDb = {
       imageUrl: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=800',
       verified: true
     },
-    {
-      id: 2,
-      name: 'Max Super Speciality Hospital',
-      registrationNo: 'MAXH-8812',
-      address: 'Phase 6, Near Civil Hospital',
-      city: 'Mohali',
-      state: 'Punjab',
-      pincode: '160055',
-      phone: '+91 172 554 8888',
-      emergencyPhone: '+91 172 554 8888',
-      email: 'contact@maxhealth.in',
-      availableBeds: 42,
-      totalBeds: 200,
-      rating: 4.5,
-      consultationRate: 500,
-      distance: '12.4 km',
-      latitude: 30.7226,
-      longitude: 76.7214,
-      emergencyServices: true,
-      icuAvailable: true,
-      facilities: ['24/7 Emergency SOS', 'ICU & Trauma Center', 'Advanced Surgery', 'Cardiology', 'Radiology & MRI'],
-      imageUrl: '/src/assets/max-hospital-mohali.png',
-      verified: true
-    },
-    {
-      id: 3,
-      name: 'Fortis Hospital Mohali',
-      registrationNo: 'FORTH-7731',
-      address: 'Sector 62, Phase VIII',
-      city: 'Mohali',
-      state: 'Punjab',
-      pincode: '160062',
-      phone: '+91 172 469 2222',
-      emergencyPhone: '+91 172 469 2222',
-      email: 'info@fortis.in',
-      availableBeds: 30,
-      totalBeds: 180,
-      rating: 4.6,
-      consultationRate: 600,
-      distance: '15.1 km',
-      latitude: 30.6865,
-      longitude: 76.7328,
-      emergencyServices: true,
-      icuAvailable: true,
-      facilities: ['24/7 Emergency SOS', 'Cancer Institute & ICU', 'Heart & Organ Care', '24/7 Trauma Unit', 'Blood Bank'],
-      imageUrl: '/src/assets/fortis-hospital-mohali.png',
-      verified: true
-    },
+
     {
       id: 4,
       name: 'Alpha Chandigarh Multispecialty Hospital',
@@ -1233,17 +1186,31 @@ export const mockDb = {
   hospital: {
     getAll: async () => {
       await delay(300);
-      return getDb().hospitals;
+      const hospitals = getDb().hospitals || [];
+      return hospitals.filter(h => 
+        h && h.name && 
+        !h.name.toLowerCase().includes('max super') && 
+        !h.name.toLowerCase().includes('fortis')
+      );
     },
     getById: async (id) => {
       await delay(200);
-      const hospitals = getDb().hospitals;
+      const hospitals = (getDb().hospitals || []).filter(h => 
+        h && h.name && 
+        !h.name.toLowerCase().includes('max super') && 
+        !h.name.toLowerCase().includes('fortis')
+      );
       return hospitals.find(h => h.id === parseInt(id)) || hospitals[0];
     },
     search: async (query) => {
       await delay(300);
       const db = getDb();
-      return db.hospitals.filter(h => h.name.toLowerCase().includes(query.toLowerCase()));
+      const hospitals = (db.hospitals || []).filter(h => 
+        h && h.name && 
+        !h.name.toLowerCase().includes('max super') && 
+        !h.name.toLowerCase().includes('fortis')
+      );
+      return hospitals.filter(h => h.name.toLowerCase().includes(query.toLowerCase()));
     },
     getByDoctor: async (doctorId) => {
       await delay(200);

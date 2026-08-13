@@ -910,8 +910,7 @@ function FacultyPortalTab({ _studentProfileData, fetchBookings }) {
                 style={{ width: '100%', padding: '10px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '0.85rem', color: '#1e293b' }}
               >
                 <option value="CU Health Center - Occupational Health Wing">Chandigarh University Health Center (Campus)</option>
-                <option value="Max Super Speciality Hospital (Corporate Partner)">Max Super Speciality Hospital (Mohali)</option>
-                <option value="Fortis Hospital (Corporate Partner)">Fortis Hospital (Mohali)</option>
+                <option value="Alpha Chandigarh Multispecialty Hospital (Partner)">Alpha Chandigarh Multispecialty Hospital (Kharar)</option>
               </select>
             </div>
 
@@ -995,7 +994,7 @@ function FacultyPortalTab({ _studentProfileData, fetchBookings }) {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.82rem' }}>
                 <span style={{ color: '#64748b' }}>Network Hospitals:</span>
-                <strong style={{ color: '#1e293b' }}>Max, Fortis, CU Health Wing</strong>
+                <strong style={{ color: '#1e293b' }}>Alpha Chandigarh, CU Health Wing</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.82rem' }}>
                 <span style={{ color: '#64748b' }}>Medicine Allowance:</span>
