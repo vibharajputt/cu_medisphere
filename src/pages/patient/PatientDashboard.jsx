@@ -995,21 +995,6 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
             </div>
           </div>
         </div>
-      )}                 </div>
-                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#334155', lineHeight: 1.5, background: '#ffffff', padding: '10px 12px', borderRadius: '6px', border: '1px solid #f1f5f9' }}>
-                      <strong>A:</strong> {item.a}
-                    </p>
-                  </div>
-                ));
-              })()}
-            </div>
-
-            {/* Footer */}
-            <div style={{ background: '#f1f5f9', padding: '12px 24px', borderTop: '1px solid #cbd5e1', textAlign: 'right' }}>
-              <button onClick={() => setShowFaqsModal(false)} style={{ background: '#0f766e', color: '#ffffff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontWeight: 700, cursor: 'pointer', fontSize: '0.84rem' }}>Close FAQs</button>
-            </div>
-          </div>
-        </div>
       )}
 
     </div>
