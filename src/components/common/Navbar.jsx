@@ -105,7 +105,7 @@ export default function Navbar() {
               }
             }
 
-            const title = `💊 MedAstraX Medicine Reminder`;
+            const title = `💊 MedAstraQ Medicine Reminder`;
             let body = `${emojis[slot]} Time to take your ${labels[slot]} medicines!`;
             if (medNames.length > 0) {
               body = `${emojis[slot]} Time to take: ${medNames.join(', ')}`;

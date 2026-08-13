@@ -5,7 +5,7 @@ import { sendTwilioSmsApi, makeTwilioCallApi } from '../../services/twilioApiSer
 
 const TwilioControlPanel = () => {
   const [phoneNumber, setPhoneNumber] = useState('+917988766566');
-  const [message, setMessage] = useState('Hello Rashika! This is a test SMS from MedAstraX.');
+  const [message, setMessage] = useState('Hello Rashika! This is a test SMS from MedAstraQ.');
   const [callerNumber] = useState('+18167506748');
   
   const [sendingSms, setSendingSms] = useState(false);
@@ -41,7 +41,7 @@ const TwilioControlPanel = () => {
         timestamp: new Date().toLocaleTimeString(),
         data: res
       });
-      toast.success(`📞 Voice Call Initiated to ${phoneNumber}! Speaking: "Hello! This is a test call from MedAstraX."`, { id: 'twilio-status', duration: 5000 });
+      toast.success(`📞 Voice Call Initiated to ${phoneNumber}! Speaking: "Hello! This is a test call from MedAstraQ."`, { id: 'twilio-status', duration: 5000 });
     } catch (err) {
       console.error('Twilio Voice Call Error:', err);
       toast.error(`❌ Failed to make call: ${err.message}`, { id: 'twilio-status' });

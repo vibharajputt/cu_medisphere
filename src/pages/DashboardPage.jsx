@@ -180,8 +180,8 @@ export default function DashboardPage() {
         {/* Sidebar navigation */}
         <aside className="dashboard-sidebar">
           <div className="brand-header-sidebar">
-            <img src={logo} alt="MedAstraX Logo" className="sidebar-logo-img" />
-            <h3>MedAstraX</h3>
+            <img src={logo} alt="MedAstraQ Logo" className="sidebar-logo-img" />
+            <h3>MedAstraQ</h3>
           </div>
 
           <div className="user-profile-summary">
