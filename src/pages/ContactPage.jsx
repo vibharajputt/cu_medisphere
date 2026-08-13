@@ -189,7 +189,7 @@ export default function ContactPage() {
 
                   <div className="form-group">
                     <label htmlFor="contact-phone" className="form-label">
-                      <FiPhone /> Phone Number <span className="optional-tag">(optional)</span>
+                      <FiPhone /> Phone Number
                     </label>
                     <input
                       id="contact-phone"

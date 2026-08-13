@@ -455,7 +455,7 @@ export default function LandingPage() {
                     <input id="lc-email" type="email" name="email" value={contactForm.email} onChange={handleContactChange} placeholder="john@example.com" required className="contact-input" />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="lc-phone" className="form-label"><FiPhone /> Phone Number <span className="optional-tag">(optional)</span></label>
+                    <label htmlFor="lc-phone" className="form-label"><FiPhone /> Phone Number</label>
                     <input id="lc-phone" type="tel" name="phone" value={contactForm.phone} onChange={handleContactChange} placeholder="+1 (123) 456-7890" className="contact-input" />
                   </div>
                   <div className="form-group">
