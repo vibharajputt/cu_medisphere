@@ -26,7 +26,7 @@ const categories = [
 const faqs = [
   {
     cat: 'appointments',
-    q: 'How do I book an appointment on MedAstraX?',
+    q: 'How do I book an appointment on MedAstraQ?',
     a: 'Log in to your patient account, navigate to the Hospitals section, search for a doctor or specialty, select an available slot, and confirm your booking. You\'ll get a confirmation SMS and email instantly.'
   },
   {
@@ -47,7 +47,7 @@ const faqs = [
   {
     cat: 'appointments',
     q: 'Will I receive a reminder before my appointment?',
-    a: 'Yes, MedAstraX sends automated reminders via SMS and email 24 hours and 1 hour before your scheduled appointment.'
+    a: 'Yes, MedAstraQ sends automated reminders via SMS and email 24 hours and 1 hour before your scheduled appointment.'
   },
 
   {
@@ -79,7 +79,7 @@ const faqs = [
   {
     cat: 'pharmacy',
     q: 'Can I compare pharmacy prices?',
-    a: 'Yes! MedAstraX shows nearby pharmacies with prices and estimated delivery times so you can choose the best option for you.'
+    a: 'Yes! MedAstraQ shows nearby pharmacies with prices and estimated delivery times so you can choose the best option for you.'
   },
   {
     cat: 'pharmacy',
@@ -89,7 +89,7 @@ const faqs = [
   {
     cat: 'pharmacy',
     q: 'Can I order medicines without a prescription?',
-    a: 'Over-the-counter (OTC) medicines can be ordered without a prescription. Prescription medicines require a valid digital prescription from a verified MedAstraX doctor.'
+    a: 'Over-the-counter (OTC) medicines can be ordered without a prescription. Prescription medicines require a valid digital prescription from a verified MedAstraQ doctor.'
   },
 
   {
@@ -105,13 +105,13 @@ const faqs = [
   {
     cat: 'prescriptions',
     q: 'Are digital prescriptions legally valid in India?',
-    a: 'Yes. Digital prescriptions issued by verified doctors on MedAstraX comply with applicable regulations and are legally valid for dispensing medicines at pharmacies.'
+    a: 'Yes. Digital prescriptions issued by verified doctors on MedAstraQ comply with applicable regulations and are legally valid for dispensing medicines at pharmacies.'
   },
 
   {
     cat: 'payments',
     q: 'What payment methods are accepted?',
-    a: 'MedAstraX accepts UPI, debit/credit cards, net banking, and popular wallets. All transactions are secured via Razorpay with HMAC signature verification.'
+    a: 'MedAstraQ accepts UPI, debit/credit cards, net banking, and popular wallets. All transactions are secured via Razorpay with HMAC signature verification.'
   },
   {
     cat: 'payments',

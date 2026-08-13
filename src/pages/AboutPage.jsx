@@ -88,7 +88,7 @@ export default function AboutPage() {
     },
     {
       title: "Voice Assistant",
-      description: "Talk to MedAstraX in your own language, anytime.",
+      description: "Talk to MedAstraQ in your own language, anytime.",
       icon: <FiMic />,
       class: "icon-voice"
     },

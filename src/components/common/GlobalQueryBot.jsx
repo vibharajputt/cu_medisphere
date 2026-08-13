@@ -286,7 +286,7 @@ export default function GlobalQueryBot() {
     setChatHistory([
       {
         sender: 'ai',
-        text: '👋 **Session reset!** How can I assist you with MedAstraX platform queries or wellness support?'
+        text: '👋 **Session reset!** How can I assist you with MedAstraQ platform queries or wellness support?'
       }
     ]);
   };

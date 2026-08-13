@@ -2053,7 +2053,7 @@ ${detailedSection}
       const hospitalName = data.hospitalName || 'CU Health Center';
       const trackingLink = data.trackingLink || 'http://localhost:5173/track-ambulance';
 
-      const smsText = `🚨 MEDASTRAX EMERGENCY SOS ALERT! Student ${studentName} (${studentUid}) triggered an SOS at CU Campus (${data.userLatitude || 30.7686}, ${data.userLongitude || 76.5754}). Selected Facility: ${hospitalName}. Campus Ambulance Unit AMB-CU-108 dispatched. Track Live: ${trackingLink}`;
+      const smsText = `🚨 MEDASTRAQ EMERGENCY SOS ALERT! Student ${studentName} (${studentUid}) triggered an SOS at CU Campus (${data.userLatitude || 30.7686}, ${data.userLongitude || 76.5754}). Selected Facility: ${hospitalName}. Campus Ambulance Unit AMB-CU-108 dispatched. Track Live: ${trackingLink}`;
       
       console.log(`[TWILIO SMS DISPATCHED] To: ${phone} | Body: ${smsText}`);
       console.log(`[TWILIO VOICE CALL DISPATCHED] Calling Emergency Contact: ${phone} | Voice Script: "Emergency SOS Alert! Student ${studentName} has triggered an SOS inside Chandigarh University Campus. Campus Ambulance AMB-CU-108 has been dispatched to ${hospitalName}. Please press 1 to connect with Campus Medical Officer."`);
