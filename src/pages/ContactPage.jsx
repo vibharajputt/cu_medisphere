@@ -69,7 +69,7 @@ export default function ContactPage() {
             Get in <span className="text-gradient">Touch!</span>
           </h1>
           <p className="contact-subtitle">
-            Make Your Hospital Smarter, Faster and Better with Improved Patient Experience and Efficiency.
+            Make Your Campus Health Center Smarter, Faster and Better with Improved Student & Faculty Wellness.
           </p>
           <p className="contact-reach">
             Reach out to us and we'll get back to you as soon as possible.
@@ -95,7 +95,7 @@ export default function ContactPage() {
               </div>
               <div className="info-text">
                 <h4>Our Office</h4>
-                <p>MedAstraX HQ, Health Innovation Park,<br />Bengaluru, Karnataka — 560001</p>
+                <p>MedAstraQ HQ, Health Innovation Park,<br />Bengaluru, Karnataka — 560001</p>
               </div>
             </motion.div>
 
@@ -109,7 +109,7 @@ export default function ContactPage() {
               </div>
               <div className="info-text">
                 <h4>Support</h4>
-                <p>support@MedAstraX.com<br />+91 79887XXXXX</p>
+                <p>support@medastraq.com<br />+91 79887XXXXX</p>
               </div>
             </motion.div>
 
@@ -131,7 +131,7 @@ export default function ContactPage() {
             <div className="contact-quote-box">
               <span className="contact-quote-mark">"</span>
               <p>Every family deserves trusted health support in their pocket, 24/7.</p>
-              <span className="contact-quote-author">— MedAstraX</span>
+              <span className="contact-quote-author">— MedAstraQ</span>
             </div>
           </motion.div>
 
