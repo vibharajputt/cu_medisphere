@@ -91,6 +91,18 @@ export default function GlobalQueryBot() {
   }, []);
 
   useEffect(() => {
+    const handleVoiceQueryEvent = (e) => {
+      const query = e.detail?.query;
+      if (query) {
+        setChatOpen(true);
+        handleSendChat(query);
+      }
+    };
+    window.addEventListener('medastraq_voice_query', handleVoiceQueryEvent);
+    return () => window.removeEventListener('medastraq_voice_query', handleVoiceQueryEvent);
+  }, []);
+
+  useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
@@ -370,7 +382,7 @@ export default function GlobalQueryBot() {
   };
 
   return (
-    <div className={`global-query-bot-container ${isPatientDashboard ? 'dashboard-shifted' : ''}`}>
+    <div className="global-query-bot-container">
       
       {/* Voice Status Alert */}
       {isListening && (
@@ -380,30 +392,8 @@ export default function GlobalQueryBot() {
         </div>
       )}
 
-      {/* Floating Buttons: Mic & Chat Trigger */}
+      {/* Floating Button: AI Assistant Trigger */}
       <div className="global-bot-fab-group">
-        
-        {/* Voice Assistant Button */}
-        <button 
-          className={`global-mic-fab ${isListening ? 'listening' : ''}`}
-          onClick={handleToggleListening}
-          title={isListening ? "Stop Voice Input" : "Ask with AI Voice Assistant"}
-        >
-          {isListening ? (
-            <FiMicOff size={20} className="mic-icon-off" />
-          ) : (
-            <FiMic size={20} className="mic-icon-on" />
-          )}
-          {isListening && (
-            <div className="mic-waves">
-              <span className="wave-bar"></span>
-              <span className="wave-bar"></span>
-              <span className="wave-bar"></span>
-            </div>
-          )}
-        </button>
-
-        {/* Chatbot Toggle Button */}
         <button 
           className={`global-chat-fab ${chatOpen ? 'open' : ''}`} 
           onClick={() => setChatOpen(!chatOpen)}
