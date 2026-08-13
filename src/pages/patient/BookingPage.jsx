@@ -486,7 +486,7 @@ export default function BookingPage() {
           key: keyId, // public key from backend
           amount: amount * 100, // amount in paise
           currency: "INR",
-          name: "MedAstraX Care",
+          name: "MedAstraQ Care",
           description: `Consultation Booking at ${hospital.name}`,
           order_id: orderId,
           handler: async function (response) {
