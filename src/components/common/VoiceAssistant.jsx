@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { FiMic, FiMicOff } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import './VoiceAssistant.css';
+import { aiAPI } from '../../services/api';
 
 export default function VoiceAssistant() {
   const [isListening, setIsListening] = useState(false);
@@ -66,7 +67,7 @@ export default function VoiceAssistant() {
     recognitionRef.current = recognition;
   }, []);
 
-  const handleIntent = (text) => {
+  const handleIntent = async (text) => {
     toast.success(`Heard: "${text}"`, { duration: 3000 });
 
     if (convStateRef.current === 'ASKING_SYMPTOMS') {
@@ -174,7 +175,23 @@ export default function VoiceAssistant() {
       return;
     }
 
-    toast('Command not recognized. Please try again.', { icon: '🤔', duration: 3000 });
+    try {
+      toast('Thinking...', { icon: '🤖', id: 'ai-thinking' });
+      const res = await aiAPI.queryChat(text, null);
+      toast.dismiss('ai-thinking');
+      
+      let reply = res.data?.reply || 'Sorry, I couldn\'t process that.';
+      
+      // Remove markdown for speech synthesis
+      const cleanReply = reply.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1');
+      speak(cleanReply);
+      toast.success(cleanReply, { duration: 4000 });
+    } catch (err) {
+      toast.dismiss('ai-thinking');
+      console.error('AI Error:', err);
+      speak("I am having trouble connecting to the server.");
+      toast('Could not connect to AI.', { icon: '⚠️', duration: 3000 });
+    }
   };
 
   const toggleListen = () => {
