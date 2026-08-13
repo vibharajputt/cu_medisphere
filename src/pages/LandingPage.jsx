@@ -18,7 +18,7 @@ import {
   FiHeadphones
 } from 'react-icons/fi';
 import { FaUserMd, FaUser, FaStore } from 'react-icons/fa';
-import doctorPatientImg from '../assets/university-students-hero.jpg';
+import doctorPatientImg from '../assets/campus-health-hero.jpg';
 import drAdityaImg from '../assets/dr-aditya.png';
 import MedAstraXLogo from '../assets/medastrax-logo-new.png';
 import './LandingPage.css';
