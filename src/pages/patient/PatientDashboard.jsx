@@ -67,6 +67,14 @@ import HealthMapTab from './HealthMapTab';
 
 function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
   const [activeSubTab, setActiveSubTab] = useState('basic'); // 'basic', 'subjects', 'history'
+  
+  const [showLeaveProcessModal, setShowLeaveProcessModal] = useState(false);
+  const [showLeavePolicyModal, setShowLeavePolicyModal] = useState(false);
+  const [showFaqsModal, setShowFaqsModal] = useState(false);
+  const [faqSearchQuery, setFaqSearchQuery] = useState('');
+  const [faqCategoryFilter, setFaqCategoryFilter] = useState('All');
+  const [processSubTab, setProcessSubTab] = useState('medical'); // 'medical', 'vdl', 'general'
+  const [policySubTab, setPolicySubTab] = useState('medical'); // 'medical', 'duty', 'general', 'abbreviations'
 
   const userType = localStorage.getItem('user_type');
   const isFaculty = user?.role === 'FACULTY' || _studentProfileData?.role === 'FACULTY' || userType === 'FACULTY';
@@ -202,14 +210,26 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
     <div className="cuims-medical-leave-container" style={{ fontFamily: 'Outfit, sans-serif' }}>
       
       {/* CUIMS Header Warning Buttons */}
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '14px' }}>
-        <button type="button" style={{ background: '#e11d48', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }} onClick={() => toast.info('CUIMS Leave process workflow manual active')}>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '14px', flexWrap: 'wrap' }}>
+        <button 
+          type="button" 
+          style={{ background: '#e11d48', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(225,29,72,0.3)', transition: 'transform 0.15s' }} 
+          onClick={() => setShowLeaveProcessModal(true)}
+        >
           ➜ VIEW LEAVE PROCESS
         </button>
-        <button type="button" style={{ background: '#ea580c', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }} onClick={() => toast.info(isFaculty ? 'HOD Medical Exemption rules: Minimum duty threshold required.' : 'HOD Medical Exemption rules: Minimum 75% threshold needed.')}>
+        <button 
+          type="button" 
+          style={{ background: '#ea580c', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(234,88,12,0.3)', transition: 'transform 0.15s' }} 
+          onClick={() => setShowLeavePolicyModal(true)}
+        >
           ❓ VIEW LEAVE POLICY
         </button>
-        <button type="button" style={{ background: '#0f766e', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }} onClick={() => toast.info('FAQs loaded')}>
+        <button 
+          type="button" 
+          style={{ background: '#0f766e', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '0.82rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(15,118,110,0.3)', transition: 'transform 0.15s' }} 
+          onClick={() => setShowFaqsModal(true)}
+        >
           📄 VIEW FAQ'S
         </button>
       </div>
@@ -668,6 +688,571 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          1. LEAVE PROCESS MODAL
+      ───────────────────────────────────────────────────────────── */}
+      {showLeaveProcessModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', zIndex: 999999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#ffffff', maxWidth: '850px', width: '100%', maxHeight: '90vh', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)', border: '1px solid #cbd5e1' }}>
+            
+            {/* Header */}
+            <div style={{ background: 'linear-gradient(135deg, #e11d48, #be123c)', color: '#ffffff', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>➜</span> Process to Apply Student Leave
+                </h3>
+                <p style={{ fontSize: '0.8rem', opacity: 0.9, margin: '4px 0 0 0' }}>Official CUIMS / MedAstraQ Leave Workflow & Step-by-Step Guide</p>
+              </div>
+              <button onClick={() => setShowLeaveProcessModal(false)} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: '#ffffff', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1.1rem', fontWeight: 'bold' }}>✕</button>
+            </div>
+
+            {/* Sub-tabs */}
+            <div style={{ display: 'flex', background: '#f8fafc', borderBottom: '1px solid #cbd5e1', padding: '0 16px' }}>
+              <button 
+                onClick={() => setProcessSubTab('medical')}
+                style={{ padding: '12px 18px', border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.85rem', color: processSubTab === 'medical' ? '#e11d48' : '#64748b', borderBottom: processSubTab === 'medical' ? '3px solid #e11d48' : 'none', cursor: 'pointer' }}
+              >
+                🩺 Medical Leave Process
+              </button>
+              <button 
+                onClick={() => setProcessSubTab('vdl')}
+                style={{ padding: '12px 18px', border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.85rem', color: processSubTab === 'vdl' ? '#e11d48' : '#64748b', borderBottom: processSubTab === 'vdl' ? '3px solid #e11d48' : 'none', cursor: 'pointer' }}
+              >
+                🔷 Voluntary Duty Leave (VDL)
+              </button>
+              <button 
+                onClick={() => setProcessSubTab('general')}
+                style={{ padding: '12px 18px', border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.85rem', color: processSubTab === 'general' ? '#e11d48' : '#64748b', borderBottom: processSubTab === 'general' ? '3px solid #e11d48' : 'none', cursor: 'pointer' }}
+              >
+                📄 General Leave Process
+              </button>
+            </div>
+
+            {/* Body Content */}
+            <div style={{ padding: '20px', overflowY: 'auto', flex: 1, fontSize: '0.86rem', color: '#334155' }}>
+              
+              {/* MEDICAL LEAVE PROCESS */}
+              {processSubTab === 'medical' && (
+                <div>
+                  <div style={{ background: '#ffe4e6', borderLeft: '4px solid #e11d48', padding: '12px 16px', borderRadius: '4px', marginBottom: '16px', color: '#9f1239', fontWeight: 600 }}>
+                    📌 <strong>Medical Leave Rules:</strong> Student can apply only post-dated leave within <strong>SEVEN days</strong> of reporting back. Minimum duration is <strong>3 working days</strong>. Maximum benefit allowed is <strong>10 working days</strong> per semester.
+                  </div>
+
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem', marginTop: '10px' }}>
+                    <thead>
+                      <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', textAlign: 'left' }}>
+                        <th style={{ padding: '10px', width: '15%' }}>Step</th>
+                        <th style={{ padding: '10px', width: '40%' }}>Action / Requirements</th>
+                        <th style={{ padding: '10px', width: '45%' }}>Remarks & Verification Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 1</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Select Medical Leave</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Select Medical Leave from CUIMS Navigation &gt;&gt; Apply Student Leave</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 2</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Select start & end date of leave (Minimum 3 Days)</td>
+                        <td style={{ padding: '10px', color: '#b91c1c', fontWeight: 600 }}>Student can apply only post-dated leave within seven days of reporting back.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 3</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Get the rectification approved from Subject Teacher (if any)</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Subject teacher verification for missed attendance lectures.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 4</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Attendance Check</td>
+                        <td style={{ padding: '10px', color: '#b91c1c', fontWeight: 700 }}>No attendance check before applying.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 5</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Medical Reason</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Student has to describe his/her illness details clearly.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 6</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Uploading Medical Documents</td>
+                        <td style={{ padding: '10px', color: '#be123c', fontWeight 700 }}>MANDATORY: Hospital admission slip, blood reports, lab test reports, discharge slip, doctor fitness certificate, and medical bills.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 7</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Submit the leave</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Final online submission on CUIMS / MedAstraQ.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 8</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Recommendation by HOD</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Departmental HOD reviews genuine medical case.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 9</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Marked to Medical Board under Registrar Office</td>
+                        <td style={{ padding: '10px', color: '#0f766e', fontWeight 600 }}>Registrar / University Medical Officer review.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 10</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Medical Board Meeting</td>
+                        <td style={{ padding: '10px', color: '#1e293b', fontWeight 600 }}>Student shall be asked to present his/her case with all ORIGINAL documents.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 11</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Approval / Disapproval</td>
+                        <td style={{ padding: '10px', color: '#16a34a', fontWeight 700 }}>Through CUIMS by University Medical Board.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '10px 14px', borderRadius: '6px', marginTop: '14px', fontSize: '0.8rem', color: '#991b1b' }}>
+                    <strong>Note:</strong> The student is allowed to avail maximum <strong>10 working days</strong> as medical in whole semester.
+                  </div>
+                </div>
+              )}
+
+              {/* VOLUNTARY DUTY LEAVE PROCESS */}
+              {processSubTab === 'vdl' && (
+                <div>
+                  <div style={{ background: '#eff6ff', borderLeft: '4px solid #3b82f6', padding: '12px 16px', borderRadius: '4px', marginBottom: '16px', color: '#1e40af', fontWeight: 600 }}>
+                    🔷 <strong>Voluntary Duty Leave Rules:</strong> Apply pre-dated (preferably). Post-dated application allowed within 3 days under special cases. Max <strong>10 VDL per subject</strong> (5 VDL per subject for TPP students).
+                  </div>
+
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
+                    <thead>
+                      <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', textAlign: 'left' }}>
+                        <th style={{ padding: '10px', width: '15%' }}>Step</th>
+                        <th style={{ padding: '10px', width: '40%' }}>Action / Option</th>
+                        <th style={{ padding: '10px', width: '45%' }}>Remarks & Verification</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 1</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Select Event</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Sports Events / Centralized Events (CEC) / Cultural Activity (Centralized) / NSS etc. from dropdown.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 2</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Select Date Leave</td>
+                        <td style={{ padding: '10px', color: '#1e40af' }}>Must apply pre-dated (preferably). Post-dated allowed within three days under special circumstances.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 3</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Select Day Bases or Lecture Bases</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Student can apply for lecture-wise or full day-wise.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 4</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Attendance Check</td>
+                        <td style={{ padding: '10px', color: '#dc2626', fontWeight 700 }}>No attendance check before applying.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 5</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Remarks</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Student has to put remarks for the purpose of duty leave.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 6</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Submit the duty leave</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Submit duty leave application online.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 7</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Recommendation by HOD</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Departmental HOD recommendation.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 8</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Approval by Event Organizer</td>
+                        <td style={{ padding: '10px', color: '#16a34a', fontWeight 700 }}>Physical verification of document will be done by Organizer of event.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', padding: '10px 14px', borderRadius: '6px', marginTop: '14px', fontSize: '0.8rem', color: '#0369a1' }}>
+                    <strong>Note:</strong> The student can avail maximum of <strong>10 Voluntary Duty leaves</strong> (For TPP Students it is <strong>5 duty leaves</strong>) per subject in whole semester.
+                  </div>
+                </div>
+              )}
+
+              {/* GENERAL LEAVE PROCESS */}
+              {processSubTab === 'general' && (
+                <div>
+                  <div style={{ background: '#fef3c7', borderLeft: '4px solid #f59e0b', padding: '12px 16px', borderRadius: '4px', marginBottom: '16px', color: '#92400e', fontWeight: 600 }}>
+                    📄 <strong>General Leave Rules:</strong> Apply pre-dated only. No benefit of attendance granted. Used to preserve Active status on CUIMS when absent for continuous 10+ days.
+                  </div>
+
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
+                    <thead>
+                      <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', textAlign: 'left' }}>
+                        <th style={{ padding: '10px', width: '15%' }}>Step</th>
+                        <th style={{ padding: '10px', width: '40%' }}>Action</th>
+                        <th style={{ padding: '10px', width: '45%' }}>Rules & Requirements</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 1</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Select General Leave</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Select General Leave from CUIMS Navigation &gt;&gt; Apply Student Leave</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 2</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Select start & end date of leave</td>
+                        <td style={{ padding: '10px', color: '#b45309', fontWeight 600 }}>Student can apply ONLY pre-dated leave. Minimum 5 days duration.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 3</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Remarks</td>
+                        <td style={{ padding: '10px', color: '#64748b' }}>Student has to mention genuine reason for leave.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
+                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 4</td>
+                        <td style={{ padding: '10px', fontWeight 600 }}>Recommendation & Approval by HOD</td>
+                        <td style={{ padding: '10px', color: '#16a34a', fontWeight 700 }}>Student status shall remain ACTIVE during approved leave period.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: '10px 14px', borderRadius: '6px', marginTop: '14px', fontSize: '0.8rem', color: '#92400e' }}>
+                    <strong>Note:</strong> No benefit of attendance shall be granted to the student. The status of the student shall remain active if the leave gets approved.
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div style={{ background: '#f1f5f9', padding: '12px 24px', borderTop: '1px solid #cbd5e1', textAlign: 'right' }}>
+              <button onClick={() => setShowLeaveProcessModal(false)} style={{ background: '#e11d48', color: '#ffffff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontWeight: 700, cursor: 'pointer', fontSize: '0.84rem' }}>Close Guide</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      {/* ─────────────────────────────────────────────────────────────
+          2. LEAVE POLICY MODAL
+      ───────────────────────────────────────────────────────────── */}
+      {showLeavePolicyModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', zIndex: 999999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#ffffff', maxWidth: '900px', width: '100%', maxHeight: '90vh', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)', border: '1px solid #cbd5e1' }}>
+            
+            {/* Header */}
+            <div style={{ background: 'linear-gradient(135deg, #ea580c, #c2410c)', color: '#ffffff', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>📜</span> STUDENT LEAVE POLICY (Academic Planning & Monitoring)
+                </h3>
+                <p style={{ fontSize: '0.8rem', opacity: 0.9, margin: '4px 0 0 0' }}>Comprehensive Attendance Guidelines & Rules for Duty, Medical & General Leave</p>
+              </div>
+              <button onClick={() => setShowLeavePolicyModal(false)} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: '#ffffff', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1.1rem', fontWeight: 'bold' }}>✕</button>
+            </div>
+
+            {/* Sub-tabs */}
+            <div style={{ display: 'flex', background: '#f8fafc', borderBottom: '1px solid #cbd5e1', padding: '0 16px', overflowX: 'auto' }}>
+              <button 
+                onClick={() => setPolicySubTab('medical')}
+                style={{ padding: '12px 18px', border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.85rem', color: policySubTab === 'medical' ? '#ea580c' : '#64748b', borderBottom: policySubTab === 'medical' ? '3px solid #ea580c' : 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                🩺 Medical Leave Policy
+              </button>
+              <button 
+                onClick={() => setPolicySubTab('duty')}
+                style={{ padding: '12px 18px', border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.85rem', color: policySubTab === 'duty' ? '#ea580c' : '#64748b', borderBottom: policySubTab === 'duty' ? '3px solid #ea580c' : 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                📋 Duty Leave Policy
+              </button>
+              <button 
+                onClick={() => setPolicySubTab('general')}
+                style={{ padding: '12px 18px', border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.85rem', color: policySubTab === 'general' ? '#ea580c' : '#64748b', borderBottom: policySubTab === 'general' ? '3px solid #ea580c' : 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                📄 General Leave Policy
+              </button>
+              <button 
+                onClick={() => setPolicySubTab('abbreviations')}
+                style={{ padding: '12px 18px', border: 'none', background: 'transparent', fontWeight: 700, fontSize: '0.85rem', color: policySubTab === 'abbreviations' ? '#ea580c' : '#64748b', borderBottom: policySubTab === 'abbreviations' ? '3px solid #ea580c' : 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                🔤 Abbreviations Index
+              </button>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: '20px', overflowY: 'auto', flex: 1, fontSize: '0.86rem', color: '#334155' }}>
+              
+              {/* MEDICAL LEAVE POLICY */}
+              {policySubTab === 'medical' && (
+                <div>
+                  <div style={{ background: '#fff7ed', borderLeft: '4px solid #ea580c', padding: '12px 16px', borderRadius: '4px', marginBottom: '16px' }}>
+                    <h4 style={{ margin: '0 0 6px 0', color: '#c2410c', fontSize: '0.95rem', fontWeight: 800 }}>UGC Attendance Mandate & Medical Leave Guidelines</h4>
+                    <p style={{ margin: 0, fontSize: '0.83rem', color: '#9a3412' }}>
+                      The provision of medical leave is provided ONLY in exceptional cases of serious illness during the semester. Students must maintain a minimum of <strong>75% attendance</strong> in each subject as per UGC guidelines. Minor illnesses must be covered under the 25% relaxation window.
+                    </p>
+                  </div>
+
+                  <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#1e293b', marginBottom: '10px' }}>Key Policy Rules for Availing Medical Leave:</h4>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px' }}>
+                      <strong style={{ color: '#dc2626', display: 'block', marginBottom: '4px' }}>1. No Minor Ailment Compensation</strong>
+                      NO compensation/benefit for minor ailments like headache, cold, cough, low temperature, body pain & bed rest.
+                    </div>
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px' }}>
+                      <strong style={{ color: '#0284c7', display: 'block', marginBottom: '4px' }}>2. MBBS Doctors Only</strong>
+                      Medical prescriptions/consultations for serious illness/hospitalization by registered MBBS/MD/MS doctors (only) accepted.
+                    </div>
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px' }}>
+                      <strong style={{ color: '#ea580c', display: 'block', marginBottom: '4px' }}>3. Minimum 3 Working Days</strong>
+                      Claimed ONLY for serious illness for a minimum of THREE working days. No medical leave for &lt; 3 working days.
+                    </div>
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px' }}>
+                      <strong style={{ color: '#16a34a', display: 'block', marginBottom: '4px' }}>4. Maximum 10 Days Benefit</strong>
+                      Maximum benefit of 10 working days total per semester. Student must have 75% attendance in NON-ML period.
+                    </div>
+                  </div>
+
+                  <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#1e293b', marginBottom: '8px' }}>Mandatory Verification Requirements:</h4>
+                  <ul style={{ paddingLeft: '20px', lineHeight: 1.6, margin: '0 0 16px 0' }}>
+                    <li>Must apply on CUIMS within <strong>SEVEN days</strong> after returning from illness.</li>
+                    <li>Upload all documents: Hospital admission slip, blood reports, test reports, discharge slip, fitness certificate, and medical bills.</li>
+                    <li>Must provide: <em>Hospital Name, Doctor Name & Degree, Doctor Mobile, Reception Phone, Check-in Proof, and Consultation Fee Receipt.</em></li>
+                    <li>All serious cases are reviewed fortnightly by the <strong>University Medical Board</strong> under the Office of the Registrar.</li>
+                    <li style={{ color: '#dc2626', fontWeight: 700 }}>In case of false, fake, or forged documents, strict disciplinary action will be initiated.</li>
+                  </ul>
+                </div>
+              )}
+
+              {/* DUTY LEAVE POLICY */}
+              {policySubTab === 'duty' && (
+                <div>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#1e293b', marginBottom: '8px' }}>Duty Leave Types & Attendance Reduction Formula</h4>
+                  <p style={{ fontSize: '0.83rem', color: '#64748b', marginBottom: '14px' }}>
+                    Duty Leave benefit is calculated as a <strong>reduction in the number of lectures held</strong> during the DL period.
+                  </p>
+
+                  {/* Formula Calculation Example */}
+                  <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '14px', borderRadius: '8px', marginBottom: '16px' }}>
+                    <h5 style={{ margin: '0 0 6px 0', color: '#047857', fontWeight: 800 }}>Attendance Calculation Formula Example:</h5>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', background: '#ffffff', borderRadius: '6px', overflow: 'hidden' }}>
+                      <thead>
+                        <tr style={{ background: '#d1fae5', color: '#065f46' }}>
+                          <th style={{ padding: '6px 10px' }}>Held Lectures</th>
+                          <th style={{ padding: '6px 10px' }}>Attended</th>
+                          <th style={{ padding: '6px 10px' }}>Duty Leave (VDL)</th>
+                          <th style={{ padding: '6px 10px' }}>Eligible Delivered</th>
+                          <th style={{ padding: '6px 10px' }}>Eligible Attended</th>
+                          <th style={{ padding: '6px 10px' }}>Eligible %</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>15</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>8</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center', fontWeight: 700, color: '#047857' }}>5</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>10 (15-5)</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>8</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center', fontWeight: 700, color: '#047857' }}>80.0% (Eligible)</td>
+                        </tr>
+                        <tr style={{ background: '#f9fafb' }}>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>45</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>30</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center', fontWeight: 700, color: '#047857' }}>10 (Max)</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>35 (45-10)</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center' }}>30</td>
+                          <td style={{ padding: '6px 10px', textAlign: 'center', fontWeight: 700, color: '#047857' }}>85.7% (Eligible)</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <h5 style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1e293b', marginBottom: '8px' }}>Duty Leave Categories:</h5>
+                  <ul style={{ paddingLeft: '20px', lineHeight: 1.6, margin: 0 }}>
+                    <li><strong>VDL (Volunteer Duty Leave):</strong> Max 10 DL per subject (5 for TPP). Applied by student for sports, cultural, NSS, CEC, club events.</li>
+                    <li><strong>ADL (Assigned Duty Leave):</strong> Max 10 ADL per subject in addition to VDL. Applied by HOD/Director for students representing university. Approved by Vice Chancellor.</li>
+                    <li><strong>IDL (Industrial Duty Leave):</strong> Applied by Placement Coordinator for placement drives, corporate sessions & industrial visits. Full lecture benefit.</li>
+                  </ul>
+                </div>
+              )}
+
+              {/* GENERAL LEAVE POLICY */}
+              {policySubTab === 'general' && (
+                <div>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#1e293b', marginBottom: '8px' }}>General Leave Policy Rules</h4>
+                  <p style={{ fontSize: '0.83rem', color: '#64748b', marginBottom: '14px' }}>
+                    As per attendance policy, if a student remains absent for <strong>continuous 10 days or more</strong> (other than DL and ML), their status on CUIMS becomes <strong>Non-Active</strong> automatically.
+                  </p>
+
+                  <div style={{ background: '#fef3c7', border: '1px solid #fde68a', padding: '14px', borderRadius: '8px', color: '#92400e', marginBottom: '14px' }}>
+                    <h5 style={{ margin: '0 0 6px 0', fontWeight: 800 }}>Rules to Retain ACTIVE Status:</h5>
+                    <ol style={{ paddingLeft: '20px', margin: 0, lineHeight: 1.6 }}>
+                      <li>Student must apply for General Leave through CUIMS pre-dated.</li>
+                      <li>There is NO attendance percentage benefit granted for general leave.</li>
+                      <li>General leave must be approved before availing that leave.</li>
+                      <li>HOD can approve general leave for up to 5 days. &gt;5 days requires Dean/Director/ED approval.</li>
+                    </ol>
+                  </div>
+                </div>
+              )}
+
+              {/* ABBREVIATIONS INDEX */}
+              {policySubTab === 'abbreviations' && (
+                <div>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#1e293b', marginBottom: '10px' }}>Official Leave Policy Abbreviations Index</h4>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem' }}>
+                    <thead>
+                      <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', textAlign: 'left' }}>
+                        <th style={{ padding: '8px 12px', width: '25%' }}>Abbreviation</th>
+                        <th style={{ padding: '8px 12px', width: '75%' }}>Full Expansion / Meaning</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>VDL</td><td style={{ padding: '8px 12px' }}>Volunteer Duty Leave</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>ADL</td><td style={{ padding: '8px 12px' }}>Assigned Duty Leave</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>IDL</td><td style={{ padding: '8px 12px' }}>Industrial Duty Leave</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>HOD</td><td style={{ padding: '8px 12px' }}>Academic Head of Department</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DAA</td><td style={{ padding: '8px 12px' }}>Dean of Academic Affairs</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DACA</td><td style={{ padding: '8px 12px' }}>Department of Art and Culture Affairs</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DSW</td><td style={{ padding: '8px 12px' }}>Department of Student Welfare</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>AD / ASD</td><td style={{ padding: '8px 12px' }}>Associate / Assistant Director</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>MST / EST</td><td style={{ padding: '8px 12px' }}>Mid Semester Test / End Semester Test</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>NSS / NCC</td><td style={{ padding: '8px 12px' }}>National Service Scheme / National Cadet Corps</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>CEC</td><td style={{ padding: '8px 12px' }}>Central Events Cell</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DL / ML</td><td style={{ padding: '8px 12px' }}>Duty Leave / Medical Leave</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div style={{ background: '#f1f5f9', padding: '12px 24px', borderTop: '1px solid #cbd5e1', textAlign: 'right' }}>
+              <button onClick={() => setShowLeavePolicyModal(false)} style={{ background: '#ea580c', color: '#ffffff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontWeight 700, cursor: 'pointer', fontSize: '0.84rem' }}>Close Policy</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      {/* ─────────────────────────────────────────────────────────────
+          3. FAQ'S MODAL
+      ───────────────────────────────────────────────────────────── */}
+      {showFaqsModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', zIndex: 999999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#ffffff', maxWidth: '850px', width: '100%', maxHeight: '90vh', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)', border: '1px solid #cbd5e1' }}>
+            
+            {/* Header */}
+            <div style={{ background: 'linear-gradient(135deg, #0f766e, #115e59)', color: '#ffffff', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>📄</span> FAQ'S FOR STUDENT LEAVE (21 Q&As)
+                </h3>
+                <p style={{ fontSize: '0.8rem', opacity: 0.9, margin: '4px 0 0 0' }}>Search & Filter Frequently Asked Questions regarding Medical, Duty & General Leaves</p>
+              </div>
+              <button onClick={() => setShowFaqsModal(false)} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: '#ffffff', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1.1rem', fontWeight: 'bold' }}>✕</button>
+            </div>
+
+            {/* Search & Filter Bar */}
+            <div style={{ padding: '14px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ flex: 1, minWidth: '240px', position: 'relative' }}>
+                <input 
+                  type="text" 
+                  placeholder="🔍 Search FAQs by keyword (e.g. 3 days, VDL, medical, attendance)..." 
+                  value={faqSearchQuery}
+                  onChange={(e) => setFaqSearchQuery(e.target.value)}
+                  style={{ width: '100%', padding: '9px 14px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '0.85rem', outline: 'none' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {['All', 'Medical Leave', 'Duty Leave', 'General Leave', 'Attendance'].map(cat => (
+                  <button 
+                    key={cat}
+                    onClick={() => setFaqCategoryFilter(cat)}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      border: 'none',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      background: faqCategoryFilter === cat ? '#0f766e' : '#e2e8f0',
+                      color: faqCategoryFilter === cat ? '#ffffff' : '#475569'
+                    }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Content List */}
+            <div style={{ padding: '20px', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {(() => {
+                const faqsList = [
+                  { q: "Q1: Can I participate in extra-curricular/co-curricular activity if my attendance percentage is less than 75%?", a: "Yes. Subjected to the condition that his/her attendance should be at-least 75% in NON-DL period in order to appear in exams.", category: "Duty Leave" },
+                  { q: "Q2: What does NON-DL and NON-ML period mean?", a: "NON-DL and NON-ML period mean Non Duty Leave and Non-Medical Leave period. For e.g.:- If 40 lectures were delivered and you took 10 lectures DL and 5 Lectures ML, then Non-DL and Non-ML period is of 25 lectures.", category: "Attendance" },
+                  { q: "Q3: How can I view my duty leave on CUIMS?", a: "You can view your duty leave in the attendance view column on CUIMS / MedAstraQ.", category: "Duty Leave" },
+                  { q: "Q4: How much benefit shall I be given for Voluntary duty leave?", a: "Student shall be granted maximum of 10 Voluntary duty leaves per subject in a semester for Non-TTP and for TPP, it is maximum 5 voluntary duty leaves per subject in a semester.", category: "Duty Leave" },
+                  { q: "Q5: Is there any minimum %age attendance criteria for Placement activities?", a: "No. For these activities, full benefit of the missed lectures during the placement interval shall be granted without having any minimum requirement of attendance percentage.", category: "Attendance" },
+                  { q: "Q6: How can I apply for duty leave?", a: "Please refer leave process to apply duty leave for the same.", category: "Duty Leave" },
+                  { q: "Q7: Can I apply the medical leave for less than three days?", a: "No, student can only apply the medical leave for minimum of 3 days and the final approval shall lie with the medical board only.", category: "Medical Leave" },
+                  { q: "Q8: How can I apply medical leave?", a: "You have to apply for medical leave through CUIMS within SEVEN days after returning from the period of sickness.", category: "Medical Leave" },
+                  { q: "Q9: Who will approve my medical leave?", a: "All the medical leaves shall be approved by Medical Board of the university.", category: "Medical Leave" },
+                  { q: "Q10: What all documents I need to bring while applying for medical leave?", a: "After applying online leave within seven days after returning from the leave of illness. During physical verification a student need to bring all the proper medical documents like Prescription of doctor, admission in the hospital, blood reports, test reports, discharge slip and fitness certificate (whichever documents stands eligible).", category: "Medical Leave" },
+                  { q: "Q11: How many medical leaves can I avail?", a: "A student can take maximum of 10 working days medical leave in a semester.", category: "Medical Leave" },
+                  { q: "Q12: What if student is ill for period of more than 10 working days?", a: "In this case student need to submit the application/form along with all documents to respective cluster Executive directors but the medical should be applied from student and approved by medical board on CUIMS. This is a request form which is subjective to approval by the panel of authorities decided by office of Vice Chancellor.", category: "Medical Leave" },
+                  { q: "Q13: Shall I get the benefit of attendance for general leave?", a: "No. This leave is only to facilitate the continuation of active status of the student.", category: "General Leave" },
+                  { q: "Q14: What is the minimum duration of the general leave which I can apply?", a: "You can apply for general leave for minimum 5 days through CUIMS.", category: "General Leave" },
+                  { q: "Q15: What If I forgot to apply predated Voluntary Duty leave (VDL)?", a: "The student must apply pre-dated (preferably) duty leave to avail benefit under this category. However, under some circumstances, the Voluntary Duty Leave can be applied post-dated within three days.", category: "Duty Leave" },
+                  { q: "Q16: What if my status gets converted to N.A due to non-applying the pre-dated leave?", a: "You have to get your status changed to Active after returning from leave through concerned head of the department through CUIMS.", category: "General Leave" },
+                  { q: "Q17: I am a TPP registered student. What kind of benefit I am entitled with in regard to Duty leaves and Medical Leave?", a: "TPP registered student shall be entitled to 5 Voluntary Duty Leaves per subject in whole semester. The Medical Leave shall remain same as for normal student but the criteria of the eligibility in examination is decided by the Department of Career Development (DCPD).", category: "Duty Leave" },
+                  { q: "Q18: How can I apply all the three kinds of leave?", a: "Please refer to the process to apply leave on CUIMS.", category: "General Leave" },
+                  { q: "Q19: What is the difference between Voluntary Duty Leave (VDL) and Assigned Duty Leave (ADL)?", a: "VDL is applied by student to participate in various intra/inter departmental/ institute/ cluster/ university events and competition. On the other side, ADL is applied by the concerned HOD of Academic department or In-charge/ Director/ Assistant Director/Head (Non-Academic)/ Chief Coordinator of any central statutory/ non-statutory division/ group/ department etc. to benefit the students representing the Chandigarh University. The final approval of ADL shall be granted by the office of the Honorable Vice Chancellor and processed by the E-Governance office.", category: "Duty Leave" },
+                  { q: "Q20: How much benefit shall I be given for Assigned duty leave (ADL)?", a: "This type of duty leave can only be applied by the designated authorities. Students can get the benefit of maximum ten ADL per subject in addition to VDL.", category: "Duty Leave" },
+                  { q: "Q21: What is Industrial Duty Leave (IDL)?", a: "This type of duty leave is specially for corporate/ industry related events like industrial visits/ placement drives/ in-campus corporate sessions. The placement coordinator has to apply this kind of DL for the students after authentication of related documents.", category: "Duty Leave" }
+                ];
+
+                const filtered = faqsList.filter(item => {
+                  const matchQuery = !faqSearchQuery || item.q.toLowerCase().includes(faqSearchQuery.toLowerCase()) || item.a.toLowerCase().includes(faqSearchQuery.toLowerCase());
+                  const matchCat = faqCategoryFilter === 'All' || item.category === faqCategoryFilter;
+                  return matchQuery && matchCat;
+                });
+
+                if (filtered.length === 0) {
+                  return (
+                    <div style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
+                      <span style={{ fontSize: '2rem' }}>🔍</span>
+                      <p style={{ marginTop: '8px', fontWeight: 600 }}>No FAQs found matching "{faqSearchQuery}"</p>
+                    </div>
+                  );
+                }
+
+                return filtered.map((item, idx) => (
+                  <div key={idx} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px', marginBottom: '8px' }}>
+                      <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f766e', margin: 0, lineHeight: 1.4 }}>
+                        {item.q}
+                      </h4>
+                      <span style={{ background: '#ccfbf1', color: '#0f766e', padding: '2px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                        {item.category}
+                      </span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#334155', lineHeight: 1.5, background: '#ffffff', padding: '10px 12px', borderRadius: '6px', border: '1px solid #f1f5f9' }}>
+                      <strong>A:</strong> {item.a}
+                    </p>
+                  </div>
+                ));
+              })()}
+            </div>
+
+            {/* Footer */}
+            <div style={{ background: '#f1f5f9', padding: '12px 24px', borderTop: '1px solid #cbd5e1', textAlign: 'right' }}>
+              <button onClick={() => setShowFaqsModal(false)} style={{ background: '#0f766e', color: '#ffffff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontWeight: 700, cursor: 'pointer', fontSize: '0.84rem' }}>Close FAQs</button>
+            </div>
           </div>
         </div>
       )}
