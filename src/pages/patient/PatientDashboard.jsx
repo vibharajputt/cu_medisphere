@@ -686,7 +686,13 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
                     📄 {l.file}
                   </div>
                 </div>
-              </di      {/* ─────────────────────────────────────────────────────────────
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
           1. LEAVE PROCESS MODAL (Medical Leave Only)
       ───────────────────────────────────────────────────────────── */}
       {showLeaveProcessModal && (
