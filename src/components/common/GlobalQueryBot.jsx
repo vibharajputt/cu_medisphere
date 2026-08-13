@@ -382,7 +382,7 @@ export default function GlobalQueryBot() {
   };
 
   return (
-    <div className={`global-query-bot-container ${isPatientDashboard ? 'dashboard-shifted' : ''}`}>
+    <div className="global-query-bot-container">
       
       {/* Voice Status Alert */}
       {isListening && (
