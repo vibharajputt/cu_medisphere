@@ -757,54 +757,54 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
                         <td style={{ padding: '10px', color: '#64748b' }}>Select Medical Leave from CUIMS Navigation &gt;&gt; Apply Student Leave</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 2</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 2</td>
                         <td style={{ padding: '10px', fontWeight: 600 }}>Select start & end date of leave (Minimum 3 Days)</td>
                         <td style={{ padding: '10px', color: '#b91c1c', fontWeight: 600 }}>Student can apply only post-dated leave within seven days of reporting back.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 3</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Get the rectification approved from Subject Teacher (if any)</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 3</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Get the rectification approved from Subject Teacher (if any)</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Subject teacher verification for missed attendance lectures.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 4</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Attendance Check</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 4</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Attendance Check</td>
                         <td style={{ padding: '10px', color: '#b91c1c', fontWeight: 700 }}>No attendance check before applying.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 5</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Medical Reason</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 5</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Medical Reason</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Student has to describe his/her illness details clearly.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 6</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Uploading Medical Documents</td>
-                        <td style={{ padding: '10px', color: '#be123c', fontWeight 700 }}>MANDATORY: Hospital admission slip, blood reports, lab test reports, discharge slip, doctor fitness certificate, and medical bills.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 6</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Uploading Medical Documents</td>
+                        <td style={{ padding: '10px', color: '#be123c', fontWeight: 700 }}>MANDATORY: Hospital admission slip, blood reports, lab test reports, discharge slip, doctor fitness certificate, and medical bills.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 7</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Submit the leave</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 7</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Submit the leave</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Final online submission on CUIMS / MedAstraQ.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 8</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Recommendation by HOD</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 8</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Recommendation by HOD</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Departmental HOD reviews genuine medical case.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 9</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Marked to Medical Board under Registrar Office</td>
-                        <td style={{ padding: '10px', color: '#0f766e', fontWeight 600 }}>Registrar / University Medical Officer review.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 9</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Marked to Medical Board under Registrar Office</td>
+                        <td style={{ padding: '10px', color: '#0f766e', fontWeight: 600 }}>Registrar / University Medical Officer review.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 10</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Medical Board Meeting</td>
-                        <td style={{ padding: '10px', color: '#1e293b', fontWeight 600 }}>Student shall be asked to present his/her case with all ORIGINAL documents.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 10</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Medical Board Meeting</td>
+                        <td style={{ padding: '10px', color: '#1e293b', fontWeight: 600 }}>Student shall be asked to present his/her case with all ORIGINAL documents.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#e11d48' }}>Step 11</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Approval / Disapproval</td>
-                        <td style={{ padding: '10px', color: '#16a34a', fontWeight 700 }}>Through CUIMS by University Medical Board.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#e11d48' }}>Step 11</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Approval / Disapproval</td>
+                        <td style={{ padding: '10px', color: '#16a34a', fontWeight: 700 }}>Through CUIMS by University Medical Board.</td>
                       </tr>
                     </tbody>
                   </table>
@@ -832,44 +832,44 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
                     </thead>
                     <tbody>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 1</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Select Event</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 1</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Select Event</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Sports Events / Centralized Events (CEC) / Cultural Activity (Centralized) / NSS etc. from dropdown.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 2</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Select Date Leave</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 2</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Select Date Leave</td>
                         <td style={{ padding: '10px', color: '#1e40af' }}>Must apply pre-dated (preferably). Post-dated allowed within three days under special circumstances.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 3</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Select Day Bases or Lecture Bases</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 3</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Select Day Bases or Lecture Bases</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Student can apply for lecture-wise or full day-wise.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 4</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Attendance Check</td>
-                        <td style={{ padding: '10px', color: '#dc2626', fontWeight 700 }}>No attendance check before applying.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 4</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Attendance Check</td>
+                        <td style={{ padding: '10px', color: '#dc2626', fontWeight: 700 }}>No attendance check before applying.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 5</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Remarks</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 5</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Remarks</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Student has to put remarks for the purpose of duty leave.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 6</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Submit the duty leave</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 6</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Submit the duty leave</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Submit duty leave application online.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 7</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Recommendation by HOD</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 7</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Recommendation by HOD</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Departmental HOD recommendation.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#2563eb' }}>Step 8</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Approval by Event Organizer</td>
-                        <td style={{ padding: '10px', color: '#16a34a', fontWeight 700 }}>Physical verification of document will be done by Organizer of event.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#2563eb' }}>Step 8</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Approval by Event Organizer</td>
+                        <td style={{ padding: '10px', color: '#16a34a', fontWeight: 700 }}>Physical verification of document will be done by Organizer of event.</td>
                       </tr>
                     </tbody>
                   </table>
@@ -897,24 +897,24 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
                     </thead>
                     <tbody>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 1</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Select General Leave</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#d97706' }}>Step 1</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Select General Leave</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Select General Leave from CUIMS Navigation &gt;&gt; Apply Student Leave</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 2</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Select start & end date of leave</td>
-                        <td style={{ padding: '10px', color: '#b45309', fontWeight 600 }}>Student can apply ONLY pre-dated leave. Minimum 5 days duration.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#d97706' }}>Step 2</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Select start & end date of leave</td>
+                        <td style={{ padding: '10px', color: '#b45309', fontWeight: 600 }}>Student can apply ONLY pre-dated leave. Minimum 5 days duration.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 3</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Remarks</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#d97706' }}>Step 3</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Remarks</td>
                         <td style={{ padding: '10px', color: '#64748b' }}>Student has to mention genuine reason for leave.</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}>
-                        <td style={{ padding: '10px', fontWeight 700, color: '#d97706' }}>Step 4</td>
-                        <td style={{ padding: '10px', fontWeight 600 }}>Recommendation & Approval by HOD</td>
-                        <td style={{ padding: '10px', color: '#16a34a', fontWeight 700 }}>Student status shall remain ACTIVE during approved leave period.</td>
+                        <td style={{ padding: '10px', fontWeight: 700, color: '#d97706' }}>Step 4</td>
+                        <td style={{ padding: '10px', fontWeight: 600 }}>Recommendation & Approval by HOD</td>
+                        <td style={{ padding: '10px', color: '#16a34a', fontWeight: 700 }}>Student status shall remain ACTIVE during approved leave period.</td>
                       </tr>
                     </tbody>
                   </table>
@@ -1110,18 +1110,18 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>VDL</td><td style={{ padding: '8px 12px' }}>Volunteer Duty Leave</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>ADL</td><td style={{ padding: '8px 12px' }}>Assigned Duty Leave</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>IDL</td><td style={{ padding: '8px 12px' }}>Industrial Duty Leave</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>HOD</td><td style={{ padding: '8px 12px' }}>Academic Head of Department</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DAA</td><td style={{ padding: '8px 12px' }}>Dean of Academic Affairs</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DACA</td><td style={{ padding: '8px 12px' }}>Department of Art and Culture Affairs</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DSW</td><td style={{ padding: '8px 12px' }}>Department of Student Welfare</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>AD / ASD</td><td style={{ padding: '8px 12px' }}>Associate / Assistant Director</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>MST / EST</td><td style={{ padding: '8px 12px' }}>Mid Semester Test / End Semester Test</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>NSS / NCC</td><td style={{ padding: '8px 12px' }}>National Service Scheme / National Cadet Corps</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>CEC</td><td style={{ padding: '8px 12px' }}>Central Events Cell</td></tr>
-                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight 700, color: '#ea580c' }}>DL / ML</td><td style={{ padding: '8px 12px' }}>Duty Leave / Medical Leave</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>VDL</td><td style={{ padding: '8px 12px' }}>Volunteer Duty Leave</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>ADL</td><td style={{ padding: '8px 12px' }}>Assigned Duty Leave</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>IDL</td><td style={{ padding: '8px 12px' }}>Industrial Duty Leave</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>HOD</td><td style={{ padding: '8px 12px' }}>Academic Head of Department</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>DAA</td><td style={{ padding: '8px 12px' }}>Dean of Academic Affairs</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>DACA</td><td style={{ padding: '8px 12px' }}>Department of Art and Culture Affairs</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>DSW</td><td style={{ padding: '8px 12px' }}>Department of Student Welfare</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>AD / ASD</td><td style={{ padding: '8px 12px' }}>Associate / Assistant Director</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>MST / EST</td><td style={{ padding: '8px 12px' }}>Mid Semester Test / End Semester Test</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>NSS / NCC</td><td style={{ padding: '8px 12px' }}>National Service Scheme / National Cadet Corps</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>CEC</td><td style={{ padding: '8px 12px' }}>Central Events Cell</td></tr>
+                      <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#fafafa' }}><td style={{ padding: '8px 12px', fontWeight: 700, color: '#ea580c' }}>DL / ML</td><td style={{ padding: '8px 12px' }}>Duty Leave / Medical Leave</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -1130,7 +1130,7 @@ function MedicalLeaveTab({ _studentProfileData, user, _currAuthProfile }) {
 
             {/* Footer */}
             <div style={{ background: '#f1f5f9', padding: '12px 24px', borderTop: '1px solid #cbd5e1', textAlign: 'right' }}>
-              <button onClick={() => setShowLeavePolicyModal(false)} style={{ background: '#ea580c', color: '#ffffff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontWeight 700, cursor: 'pointer', fontSize: '0.84rem' }}>Close Policy</button>
+              <button onClick={() => setShowLeavePolicyModal(false)} style={{ background: '#ea580c', color: '#ffffff', border: 'none', padding: '8px 20px', borderRadius: '6px', fontWeight: 700, cursor: 'pointer', fontSize: '0.84rem' }}>Close Policy</button>
             </div>
           </div>
         </div>
