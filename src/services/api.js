@@ -1,4 +1,4 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 import toast from 'react-hot-toast';
 import { mockDb } from './mockDb';
 
@@ -113,6 +113,7 @@ export const hospitalAPI = {
   update: withMockFallback((id, data) => api.put(`/hospitals/${id}`, data), mockDb.hospital.update),
   updateBeds: withMockFallback((id, beds) => api.put(`/hospitals/${id}/beds?availableBeds=${beds}`), mockDb.hospital.updateBeds),
   getDoctors: withMockFallback((id) => api.get(`/hospitals/${id}/doctors`), mockDb.hospital.getDoctors),
+  getAdvisories: withMockFallback(() => api.get('/hospitals/advisories'), mockDb.hospital.getAdvisories),
   verify: withMockFallback((id, verified) => api.put(`/hospitals/${id}/verify?verified=${verified}`), mockDb.hospital.verify),
 };
 
@@ -224,9 +225,9 @@ export const fileAPI = {
     });
 
     toast.promise(trackingPromise, {
-      loading: 'Processing file upload in background... ⏳',
-      success: 'File successfully processed by background worker! ✅',
-      error: 'Upload Failed in background ❌',
+      loading: 'Processing file upload in background... ΓÅ│',
+      success: 'File successfully processed by background worker! Γ£à',
+      error: 'Upload Failed in background Γ¥î',
     }, { id: 'background-upload' });
 
     // Convert file to Base64 so it can be saved in mock DB and persist across refreshes

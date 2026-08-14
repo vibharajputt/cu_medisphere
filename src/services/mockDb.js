@@ -1,4 +1,4 @@
-
+﻿
 const MOCK_STORAGE_KEY = 'MedAstraX_mock_db';
 
 const defaultDb = {
@@ -1184,6 +1184,17 @@ export const mockDb = {
   },
 
   hospital: {
+    getAdvisories: async () => {
+      await delay(200);
+      return [
+        {
+          id: 1,
+          title: 'CAMPUS HEALTH ADVISORY 2026',
+          date: '21 JUL 2026',
+          content: 'Free seasonal vaccination & medical fitness checkup drive at Block-B1 Medical Center.'
+        }
+      ];
+    },
     getAll: async () => {
       await delay(300);
       const hospitals = getDb().hospitals || [];
@@ -1710,25 +1721,25 @@ export const mockDb = {
       const cleanMsg = msg.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,""); // remove punctuation
       if (cleanMsg === "ok" || cleanMsg === "okay" || cleanMsg === "got it" || cleanMsg === "sure" || cleanMsg === "ok thanks" || cleanMsg === "ok thank you" || cleanMsg === "ok thankyou" || cleanMsg === "done") {
         return {
-          reply: `### 🤖 Astra AI Assistant\n\nGreat, **${userName}**! Let me know if you have any other symptoms you would like to check, or if you need help booking an appointment with one of our doctors at the CU Health Center.`,
+          reply: `### ≡ƒñû Astra AI Assistant\n\nGreat, **${userName}**! Let me know if you have any other symptoms you would like to check, or if you need help booking an appointment with one of our doctors at the CU Health Center.`,
           sessionId: sessionId || 'mock-session-abc'
         };
       }
       if (cleanMsg.includes("thank") || cleanMsg.includes("thx") || cleanMsg.includes("tanks")) {
         return {
-          reply: `### 🤖 Astra AI Assistant\n\nYou're very welcome, **${userName}**! ❤️ I'm glad I could assist you with your health query. Remember to stay hydrated and get plenty of rest. If you need any more symptom checks or help, feel free to ask anytime!`,
+          reply: `### ≡ƒñû Astra AI Assistant\n\nYou're very welcome, **${userName}**! Γ¥ñ∩╕Å I'm glad I could assist you with your health query. Remember to stay hydrated and get plenty of rest. If you need any more symptom checks or help, feel free to ask anytime!`,
           sessionId: sessionId || 'mock-session-abc'
         };
       }
       if (cleanMsg.includes("bye") || cleanMsg.includes("see you") || cleanMsg.includes("goodnight") || cleanMsg.includes("good night")) {
         return {
-          reply: `### 🤖 Astra AI Assistant\n\nGoodbye, **${userName}**! Take care of your health, and have a wonderful day ahead. Don't hesitate to reach out if you feel unwell later!`,
+          reply: `### ≡ƒñû Astra AI Assistant\n\nGoodbye, **${userName}**! Take care of your health, and have a wonderful day ahead. Don't hesitate to reach out if you feel unwell later!`,
           sessionId: sessionId || 'mock-session-abc'
         };
       }
       if (cleanMsg.startsWith("hello") || cleanMsg.startsWith("hi") || cleanMsg.startsWith("hey") || cleanMsg.startsWith("greetings") || cleanMsg.startsWith("good morning") || cleanMsg.startsWith("good afternoon") || cleanMsg.startsWith("good evening")) {
         return {
-          reply: `### 🤖 Astra AI Assistant\n\nHello **${userName}**! 👋 I am Astra, your AI Symptom Checker. How can I help you today?\n\nPlease tell me what symptoms you are experiencing (e.g., *fever*, *cough*, *stomach pain*, *headache*) so I can guide you!`,
+          reply: `### ≡ƒñû Astra AI Assistant\n\nHello **${userName}**! ≡ƒæï I am Astra, your AI Symptom Checker. How can I help you today?\n\nPlease tell me what symptoms you are experiencing (e.g., *fever*, *cough*, *stomach pain*, *headache*) so I can guide you!`,
           sessionId: sessionId || 'mock-session-abc'
         };
       }
@@ -1753,15 +1764,15 @@ If the pain is severe, localized, or accompanied by constant vomiting, **Max Sup
         } else {
           recommendationText = `Here are the top recommended healthcare facilities on our campus network:
 
-1. 🏫 **CU Health Center** (On-Campus, 0.2 km away) - Rating: **4.8 ⭐** (Highly recommended for students & faculty, verified). General Physician: **Dr. Aditya Sharma**.
-2. 🏥 **Max Super Speciality Hospital** (Mohali, 12.4 km away) - Rating: **4.5 ⭐** (Verified). Specializes in advanced diagnostics, cardiology, and emergency care.
-3. 🏥 **Fortis Hospital Mohali** (Mohali, 15.1 km away) - Rating: **4.6 ⭐**. Specializes in multispeciality care.
+1. ≡ƒÅ½ **CU Health Center** (On-Campus, 0.2 km away) - Rating: **4.8 Γ¡É** (Highly recommended for students & faculty, verified). General Physician: **Dr. Aditya Sharma**.
+2. ≡ƒÅÑ **Max Super Speciality Hospital** (Mohali, 12.4 km away) - Rating: **4.5 Γ¡É** (Verified). Specializes in advanced diagnostics, cardiology, and emergency care.
+3. ≡ƒÅÑ **Fortis Hospital Mohali** (Mohali, 15.1 km away) - Rating: **4.6 Γ¡É**. Specializes in multispeciality care.
 
 You can book appointments or online consultations with doctors at these hospitals directly in the **Hospitals & Clinics** section on the left sidebar!`;
         }
 
         return {
-          reply: `### 🏥 Astra AI Hospital & Doctor Recommendations\n\nHello **${userName}**! Based on your query, here is the best clinical match on our network:\n\n${recommendationText}\n\n*Note: In case of a medical emergency, please trigger the emergency SOS immediately in your sidebar for instant ambulance dispatch.*`,
+          reply: `### ≡ƒÅÑ Astra AI Hospital & Doctor Recommendations\n\nHello **${userName}**! Based on your query, here is the best clinical match on our network:\n\n${recommendationText}\n\n*Note: In case of a medical emergency, please trigger the emergency SOS immediately in your sidebar for instant ambulance dispatch.*`,
           sessionId: sessionId || 'mock-session-abc'
         };
       }
@@ -1787,7 +1798,7 @@ You can book appointments or online consultations with doctors at these hospital
           "Do not ignore a high fever that persists for more than 3 days.",
           "Avoid heavy physical exertion or exercise."
         ];
-        whenToSeeDoctor = `Seek immediate medical attention if your temperature exceeds 103°F (39.4°C), if it lasts more than 3 days, or if it is accompanied by a severe headache, stiff neck, shortness of breath, or confusion.${userCondition !== 'None' ? ` Since you have **${userCondition}**, consult a doctor early.` : ''}`;
+        whenToSeeDoctor = `Seek immediate medical attention if your temperature exceeds 103┬░F (39.4┬░C), if it lasts more than 3 days, or if it is accompanied by a severe headache, stiff neck, shortness of breath, or confusion.${userCondition !== 'None' ? ` Since you have **${userCondition}**, consult a doctor early.` : ''}`;
       } else if (msg.includes("cough") || msg.includes("cold") || msg.includes("throat") || msg.includes("congestion")) {
         symptom = "Cough, Cold & Throat Congestion";
         possibleCauses = `Common cold virus, flu, acute bronchitis, allergies, or environmental irritants. ${userAllergies !== 'None' && userAllergies !== '' && userAllergies !== 'None ' ? `Your allergy to **${userAllergies}** could also be a major trigger for these respiratory symptoms.` : ''}`;
@@ -1854,22 +1865,22 @@ You can book appointments or online consultations with doctors at these hospital
         whenToSeeDoctor = "You should schedule a consultation with one of our physicians if you feel your symptoms are worsening, if home care does not bring relief within 3-4 days, or if you experience any sudden severe changes in your health.";
       }
 
-      const replyMarkdown = `### 🩺 Astra AI Symptom Triage: ${symptom}
+      const replyMarkdown = `### ≡ƒ⌐║ Astra AI Symptom Triage: ${symptom}
 
 Hello **${userName}**, based on your registered patient profile (**${userGender}**, Blood Group **${userBlood}**), here is your personalized clinical triage care plan:
 
-${userCondition !== 'None' && userCondition !== '' ? `> ⚠️ **Profile Alert:** Your existing medical condition of **${userCondition}** and allergies to **${userAllergies}** have been factored into these recommendations.` : ''}
+${userCondition !== 'None' && userCondition !== '' ? `> ΓÜá∩╕Å **Profile Alert:** Your existing medical condition of **${userCondition}** and allergies to **${userAllergies}** have been factored into these recommendations.` : ''}
 
-#### 🔍 Possible Causes
+#### ≡ƒöì Possible Causes
 - ${possibleCauses}
 
-#### ✅ Do's (Dos)
+#### Γ£à Do's (Dos)
 ${dos.map(item => `- ${item}`).join('\n')}
 
-#### ❌ Don'ts (Don'ts)
+#### Γ¥î Don'ts (Don'ts)
 ${donts.map(item => `- ${item}`).join('\n')}
 
-#### 🚨 When to See a Doctor
+#### ≡ƒÜ¿ When to See a Doctor
 - ${whenToSeeDoctor}
 
 *Note: This is an automated symptom triage guidance. If you feel unwell or require immediate assistance, please book an appointment with our specialist doctors or contact the CU Health Center.*`;
@@ -1890,19 +1901,19 @@ ${donts.map(item => `- ${item}`).join('\n')}
       let reply = '';
 
       if (q.includes('register') || q.includes('sign up') || q.includes('signup') || q.includes('account') || q.includes('create')) {
-        reply = `📝 **How to Register an Account on MedAstraQ:**\n\nMedAstraQ supports role-based accounts for Students, Faculty, Doctors, Hospitals, and Pharmacies:\n\n1. **Student / Faculty Account:**\n   - Go to the [Sign Up Page](/signup).\n   - Enter your Name, Email (\`@cuchd.in\`), Mobile Number, and Password.\n   - Select your role as **Student** or **Faculty** and enter your College UID.\n   - Click **Create Account** to log in instantly!\n\n2. **Doctor / Hospital / Pharmacy Account:**\n   - On the [Sign Up Page](/signup), select **Doctor**, **Hospital**, or **Pharmacy**.\n   - Provide your License / Registration Number for instant verification.\n   - Fill in your facility details to unlock your dedicated portal!\n\n3. **Already Have an Account?**\n   - Click [Log In](/login) to enter your credentials and access your dashboard.`;
+        reply = `≡ƒô¥ **How to Register an Account on MedAstraQ:**\n\nMedAstraQ supports role-based accounts for Students, Faculty, Doctors, Hospitals, and Pharmacies:\n\n1. **Student / Faculty Account:**\n   - Go to the [Sign Up Page](/signup).\n   - Enter your Name, Email (\`@cuchd.in\`), Mobile Number, and Password.\n   - Select your role as **Student** or **Faculty** and enter your College UID.\n   - Click **Create Account** to log in instantly!\n\n2. **Doctor / Hospital / Pharmacy Account:**\n   - On the [Sign Up Page](/signup), select **Doctor**, **Hospital**, or **Pharmacy**.\n   - Provide your License / Registration Number for instant verification.\n   - Fill in your facility details to unlock your dedicated portal!\n\n3. **Already Have an Account?**\n   - Click [Log In](/login) to enter your credentials and access your dashboard.`;
       } else if (q.includes('login') || q.includes('log in') || q.includes('sign in')) {
-        reply = `🔐 **How to Log In to MedAstraQ:**\n\n1. Visit the [Login Page](/login).\n2. Enter your registered email (e.g. \`student@cuchd.in\`) and password.\n3. Click **Sign In** to navigate to your portal dashboard.\n\n*Tip: You can also ask me "login as doctor" or "login as admin" to test different roles instantly!*`;
+        reply = `≡ƒöÉ **How to Log In to MedAstraQ:**\n\n1. Visit the [Login Page](/login).\n2. Enter your registered email (e.g. \`student@cuchd.in\`) and password.\n3. Click **Sign In** to navigate to your portal dashboard.\n\n*Tip: You can also ask me "login as doctor" or "login as admin" to test different roles instantly!*`;
       } else if (q.includes('book') || q.includes('appointment') || q.includes('doctor') || q.includes('slot') || q.includes('consult')) {
-        reply = `📅 **How to Book a Doctor Appointment:**\n\n1. **Select Hospital / Health Center:**\n   - Go to [Dashboard](/dashboard) and browse available centers like **CU Health Center** or **Max Hospital**.\n2. **Choose Specialist:**\n   - Pick your doctor (e.g., **Dr. Aditya Sharma** - General Physician).\n3. **Select Date & Time Slot:**\n   - Choose your preferred date and slot (e.g., \`09:00 AM - 10:00 AM\`).\n4. **Consultation Mode:**\n   - Choose **In-Person Visit** or **Online Tele-consultation** (Google Meet).\n5. **Confirmation:**\n   - Click **Confirm Booking** to receive instant confirmation & digital token!`;
+        reply = `≡ƒôà **How to Book a Doctor Appointment:**\n\n1. **Select Hospital / Health Center:**\n   - Go to [Dashboard](/dashboard) and browse available centers like **CU Health Center** or **Max Hospital**.\n2. **Choose Specialist:**\n   - Pick your doctor (e.g., **Dr. Aditya Sharma** - General Physician).\n3. **Select Date & Time Slot:**\n   - Choose your preferred date and slot (e.g., \`09:00 AM - 10:00 AM\`).\n4. **Consultation Mode:**\n   - Choose **In-Person Visit** or **Online Tele-consultation** (Google Meet).\n5. **Confirmation:**\n   - Click **Confirm Booking** to receive instant confirmation & digital token!`;
       } else if (q.includes('medicine') || q.includes('pharmacy') || q.includes('buy') || q.includes('order') || q.includes('dawai') || q.includes('prescription')) {
-        reply = `💊 **How to Order Medicines & View Prescriptions:**\n\n1. **Digital Prescriptions:**\n   - Access your [My Prescriptions](/dashboard?tab=prescriptions) tab to view active digital prescriptions issued by campus doctors.\n2. **Order from Astra Pharmacy:**\n   - Click **Order Medicines** to send your prescription directly to **Astra Pharmacy**.\n3. **Delivery & Pickup:**\n   - Track real-time order status, stock availability, and campus doorstep delivery right from your dashboard!`;
+        reply = `≡ƒÆè **How to Order Medicines & View Prescriptions:**\n\n1. **Digital Prescriptions:**\n   - Access your [My Prescriptions](/dashboard?tab=prescriptions) tab to view active digital prescriptions issued by campus doctors.\n2. **Order from Astra Pharmacy:**\n   - Click **Order Medicines** to send your prescription directly to **Astra Pharmacy**.\n3. **Delivery & Pickup:**\n   - Track real-time order status, stock availability, and campus doorstep delivery right from your dashboard!`;
       } else if (q.includes('camp') || q.includes('event') || q.includes('blood') || q.includes('checkup')) {
-        reply = `🏥 **Campus Health Camps & Broadcasts:**\n\n1. **Live Announcements:**\n   - Look for the floating **🏥 Health Camp** icon at the top header of any page.\n2. **View & Register:**\n   - Click **Attend / Register Interest** on active camps (e.g. *Campus Free Eye & Dental Checkup Camp* or *Mega Blood Donation Drive*).\n3. **Admin Attendance Sync:**\n   - Your student UID & contact details are auto-synced to the Admin Attendance Table for event check-in!`;
+        reply = `≡ƒÅÑ **Campus Health Camps & Broadcasts:**\n\n1. **Live Announcements:**\n   - Look for the floating **≡ƒÅÑ Health Camp** icon at the top header of any page.\n2. **View & Register:**\n   - Click **Attend / Register Interest** on active camps (e.g. *Campus Free Eye & Dental Checkup Camp* or *Mega Blood Donation Drive*).\n3. **Admin Attendance Sync:**\n   - Your student UID & contact details are auto-synced to the Admin Attendance Table for event check-in!`;
       } else if (q.includes('reward') || q.includes('point') || q.includes('exp') || q.includes('streak') || q.includes('coin') || q.includes('badge')) {
-        reply = `🏆 **MedAstraQ Health Rewards & EXP Program:**\n\n1. **Daily Checklist:**\n   - Mark your daily health checklist (Meds, Balanced Diet, 15-min Exercise) on your [Dashboard](/dashboard).\n2. **Earn MedCoins:**\n   - Complete health goals to earn +20 to +150 MedCoins & unlock badges like *Gold Health Champion*!\n3. **Leaderboard:**\n   - View top campus performers on the [Health Rewards Leaderboard](/dashboard?tab=rewards).`;
+        reply = `≡ƒÅå **MedAstraQ Health Rewards & EXP Program:**\n\n1. **Daily Checklist:**\n   - Mark your daily health checklist (Meds, Balanced Diet, 15-min Exercise) on your [Dashboard](/dashboard).\n2. **Earn MedCoins:**\n   - Complete health goals to earn +20 to +150 MedCoins & unlock badges like *Gold Health Champion*!\n3. **Leaderboard:**\n   - View top campus performers on the [Health Rewards Leaderboard](/dashboard?tab=rewards).`;
       } else {
-        reply = `💡 **MedAstraQ Platform Guide:**\n\nRegarding your query about "${message}":\n\n- 📅 **Book Appointments:** Browse doctors & book slots on the [Dashboard](/dashboard).\n- 📝 **Register & Accounts:** Create Student, Faculty, Doctor, or Hospital accounts on [Sign Up](/signup).\n- 💊 **Prescriptions & Medicines:** Order prescribed medicines via [My Prescriptions](/dashboard?tab=prescriptions).\n- 🏥 **Health Camps:** Check active health drives using the header **🏥 Camp Icon**.\n- 🚨 **Emergency SOS:** Trigger instant 24/7 campus ambulance SOS on the [Emergency Portal](/emergency).\n\n*Feel free to ask specific questions about booking, medicines, camps, or login procedures!*`;
+        reply = `≡ƒÆí **MedAstraQ Platform Guide:**\n\nRegarding your query about "${message}":\n\n- ≡ƒôà **Book Appointments:** Browse doctors & book slots on the [Dashboard](/dashboard).\n- ≡ƒô¥ **Register & Accounts:** Create Student, Faculty, Doctor, or Hospital accounts on [Sign Up](/signup).\n- ≡ƒÆè **Prescriptions & Medicines:** Order prescribed medicines via [My Prescriptions](/dashboard?tab=prescriptions).\n- ≡ƒÅÑ **Health Camps:** Check active health drives using the header **≡ƒÅÑ Camp Icon**.\n- ≡ƒÜ¿ **Emergency SOS:** Trigger instant 24/7 campus ambulance SOS on the [Emergency Portal](/emergency).\n\n*Feel free to ask specific questions about booking, medicines, camps, or login procedures!*`;
       }
 
       return {
@@ -1969,26 +1980,26 @@ ${donts.map(item => `- ${item}`).join('\n')}
         : '- General discomfort reported.';
 
       const medicationInfo = payload?.onMedication 
-        ? `\n\n> 💊 **Active Medication Noted:** ${payload.prescriptionDetails || 'Current medication in progress.'}` 
+        ? `\n\n> ≡ƒÆè **Active Medication Noted:** ${payload.prescriptionDetails || 'Current medication in progress.'}` 
         : '';
 
       const maxSeverity = symptoms.reduce((max, s) => Math.max(max, s.severity || 0), 0);
       const riskBadge = maxSeverity >= 8 
-        ? '🔴 High Severity (Doctor Consultation Recommended)' 
+        ? '≡ƒö┤ High Severity (Doctor Consultation Recommended)' 
         : maxSeverity >= 5 
-          ? '🟡 Moderate Risk' 
-          : '🟢 Low Risk (Home Care Advisable)';
+          ? '≡ƒƒí Moderate Risk' 
+          : '≡ƒƒó Low Risk (Home Care Advisable)';
 
-      const analysisText = `### 🩺 Astra AI 2D Body Symptom Assessment & Triage
+      const analysisText = `### ≡ƒ⌐║ Astra AI 2D Body Symptom Assessment & Triage
 
 **Patient:** ${user.name || 'Naina Kumari'} (${user.gender || 'Female'}, Age ${user.age || 19}, Blood Group ${user.bloodGroup || 'B+'})
 **Assessed Body Regions:** ${bodyPartsList}
 **Triage Risk Level:** ${riskBadge}${medicationInfo}
 
-#### 🔍 Region-by-Region Breakdown
+#### ≡ƒöì Region-by-Region Breakdown
 ${detailedSection}
 
-#### 📋 Clinical Recommendations & Care Directives
+#### ≡ƒôï Clinical Recommendations & Care Directives
 1. **Targeted Relief:** Apply local warm/cold compresses to affected areas depending on whether you experience muscle tension or swelling.
 2. **Hydration & Rest:** Drink at least 8-10 glasses of water daily and avoid heavy physical strain for the next 2-3 days.
 3. **Symptom Monitoring:** Track your body temperature and pain levels. If pain increases, consult a specialist.
@@ -2053,7 +2064,7 @@ ${detailedSection}
       const hospitalName = data.hospitalName || 'CU Health Center';
       const trackingLink = data.trackingLink || 'http://localhost:5173/track-ambulance';
 
-      const smsText = `🚨 MEDASTRAQ EMERGENCY SOS ALERT! Student ${studentName} (${studentUid}) triggered an SOS at CU Campus (${data.userLatitude || 30.7686}, ${data.userLongitude || 76.5754}). Selected Facility: ${hospitalName}. Campus Ambulance Unit AMB-CU-108 dispatched. Track Live: ${trackingLink}`;
+      const smsText = `≡ƒÜ¿ MEDASTRAQ EMERGENCY SOS ALERT! Student ${studentName} (${studentUid}) triggered an SOS at CU Campus (${data.userLatitude || 30.7686}, ${data.userLongitude || 76.5754}). Selected Facility: ${hospitalName}. Campus Ambulance Unit AMB-CU-108 dispatched. Track Live: ${trackingLink}`;
       
       console.log(`[TWILIO SMS DISPATCHED] To: ${phone} | Body: ${smsText}`);
       console.log(`[TWILIO VOICE CALL DISPATCHED] Calling Emergency Contact: ${phone} | Voice Script: "Emergency SOS Alert! Student ${studentName} has triggered an SOS inside Chandigarh University Campus. Campus Ambulance AMB-CU-108 has been dispatched to ${hospitalName}. Please press 1 to connect with Campus Medical Officer."`);
@@ -2211,7 +2222,7 @@ ${detailedSection}
       };
       db.camps.unshift(newCamp);
 
-      const noticeTitle = `📢 Health Camp: ${newCamp.title}`;
+      const noticeTitle = `≡ƒôó Health Camp: ${newCamp.title}`;
       const noticeMsg = `Scheduled for ${newCamp.date} (${newCamp.timeSlot}) at ${newCamp.venue}. Target: ${newCamp.targetAudience}. Details: ${newCamp.description}`;
       
       const newNotice = {

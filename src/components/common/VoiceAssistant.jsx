@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FiMic, FiMicOff } from 'react-icons/fi';
 import toast from 'react-hot-toast';
@@ -13,7 +14,16 @@ export default function VoiceAssistant() {
   const convStateRef = useRef('IDLE');
   const bookingDataRef = useRef({ symptoms: '', time: '' });
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isAuthenticated, logout } = useAuth();
+  const isPatientDashboard = !location.pathname.includes('/doctor') &&
+                             !location.pathname.includes('/pharmacy') &&
+                             !location.pathname.includes('/lab') &&
+                             !location.pathname.includes('/hospital') &&
+                             !location.pathname.includes('/admin') &&
+                             location.pathname !== '/login' &&
+                             location.pathname !== '/signup' &&
+                             location.pathname !== '/';
 
   const speak = (message) => {
     window.speechSynthesis.cancel(); // Cancel any ongoing speech
@@ -44,7 +54,7 @@ export default function VoiceAssistant() {
 
     recognition.onstart = () => {
       setIsListening(true);
-      toast('Listening...', { icon: '🎤', duration: 2000 });
+      toast('Listening...', { icon: '≡ƒÄñ', duration: 2000 });
     };
 
     recognition.onresult = (event) => {
@@ -68,130 +78,17 @@ export default function VoiceAssistant() {
   }, []);
 
   const handleIntent = async (text) => {
-    toast.success(`Heard: "${text}"`, { duration: 3000 });
+    if (!text || !text.trim()) return;
 
-    if (convStateRef.current === 'ASKING_SYMPTOMS') {
-      bookingDataRef.current.symptoms = text;
-      convStateRef.current = 'ASKING_TIME';
-      speak("Got it. What date and time would you like to book this appointment?");
-      return;
+    // 1. Cancel any active speech output
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
     }
 
-    if (convStateRef.current === 'ASKING_TIME') {
-      bookingDataRef.current.time = text;
-      convStateRef.current = 'IDLE';
-      speak("Booking your appointment now. Please wait.");
-      const { symptoms, time } = bookingDataRef.current;
-      navigate(`/book/HOS101?autoPilot=true&symptoms=${encodeURIComponent(symptoms)}&time=${encodeURIComponent(time)}`);
-      return;
-    }
+    toast.success(`≡ƒÄÖ∩╕Å Heard: "${text}"`, { duration: 3000, icon: '≡ƒÄñ' });
 
-    const isLoginCommand = text.includes('login') || text.includes('log in') || text.includes('sign in');
-    if (isLoginCommand) {
-      const roleMap = {
-        'doctor': { role: 'DOCTOR', path: '/doctor/dashboard', name: 'Dr. Smith' },
-        'admin': { role: 'ADMIN', path: '/admin/dashboard', name: 'Admin User' },
-        'hospital': { role: 'HOSPITAL', path: '/hospital/dashboard', name: 'City Hospital' },
-        'pharmacy': { role: 'PHARMACY', path: '/pharmacy/dashboard', name: 'Health Pharmacy' },
-        'lab': { role: 'LAB', path: '/lab/dashboard', name: 'Central Lab' },
-        'student': { role: 'PATIENT', path: '/dashboard', name: 'RASHIKA POONIA' },
-        'patient': { role: 'PATIENT', path: '/dashboard', name: 'RASHIKA POONIA' }
-      };
-
-      let matchedRole = null;
-      for (const [key, data] of Object.entries(roleMap)) {
-        if (text.includes(key)) {
-          matchedRole = data;
-          break;
-        }
-      }
-
-      if (matchedRole) {
-        toast.success(`Logging into ${matchedRole.role} Dashboard...`, { duration: 4000 });
-        logout(); // Always clear previous session
-        
-        setTimeout(() => {
-          login({
-            token: 'voice-mock-jwt-token',
-            id: '24BCF10024',
-            name: matchedRole.name,
-            email: 'test@example.com',
-            role: matchedRole.role,
-            phone: '9999999999'
-          });
-          localStorage.setItem('user_type', matchedRole.role);
-          navigate(matchedRole.path);
-        }, 500);
-        return;
-      }
-    }
-
-    if (text.includes('logout') || text.includes('log out') || text.includes('sign out')) {
-      toast.success('Logging out...', { duration: 2000 });
-      logout();
-      navigate('/');
-      return;
-    }
-
-    const routeIntents = [
-      { keywords: ['emergency', 'sos', 'ambulance', 'help'], route: '/emergency', message: 'Triggering Emergency Protocols...' },
-      { keywords: ['book', 'appointment', 'consultation'], route: '/book/HOS101?autoPilot=true', message: 'Navigating to hospitals for booking...' },
-      { keywords: ['prescription', 'medicine', 'pharmacy', 'pill', 'dawai'], route: '/dashboard?tab=prescriptions', message: 'Opening your prescriptions...' },
-      { keywords: ['leave', 'certificate', 'sick leave', 'chutti'], route: '/dashboard?tab=medical-leave', message: 'Opening medical leave portal...' },
-      { keywords: ['symptom', 'checker', 'diagnosis', 'diagnose', 'bimari'], route: '/dashboard?tab=symptom-checker', message: 'Opening AI Symptom Checker...' },
-      { keywords: ['dashboard', 'home', 'profile', 'main'], route: '/dashboard', message: 'Taking you to your dashboard...' },
-      { keywords: ['vaccination', 'vaccine', 'immunization', 'tika'], route: '/dashboard?tab=vaccinations', message: 'Opening vaccination records...' },
-      { keywords: ['wellness score', 'wellbeing'], route: '/dashboard?tab=wellness-score', message: 'Checking your wellness score...' },
-      { keywords: ['map', 'nearby', 'location', 'find', 'rasta'], route: '/dashboard?tab=health-map', message: 'Opening the health map...' },
-      { keywords: ['my bookings', 'my appointments', 'schedule', 'booking'], route: '/dashboard?tab=bookings', message: 'Opening your bookings...' },
-      { keywords: ['care plan', 'care', 'plan'], route: '/dashboard?tab=care-plan', message: 'Opening your Personalized Care Plan...' },
-      { keywords: ['complementary checkup', 'free checkup', 'body checkup', 'complementary', 'full body'], route: '/dashboard?tab=full-body-checkup', message: 'Opening Complementary Checkup...' },
-      { keywords: ['reward', 'points', 'leaderboard', 'rank', 'coin'], route: '/dashboard?tab=rewards', message: 'Opening Rewards Leaderboard...' },
-      { keywords: ['refer', 'referral', 'invite', 'dost'], route: '/dashboard?tab=refer-a-student', message: 'Opening Student Referral...' },
-      { keywords: ['student health portal', 'health portal'], route: '/dashboard?tab=student-health-portal', message: 'Opening Student Health Portal...' },
-      { keywords: ['wellness center', 'mental health', 'counselor', 'mood tracker', 'stress', 'depression'], route: '/dashboard?tab=wellness-center', message: 'Opening Wellness Center...' },
-      { keywords: ['medicine trends', 'trend', 'trends'], route: '/dashboard?tab=medicine-trends', message: 'Opening Medicine Trends...' },
-      { keywords: ['analytics', 'stats', 'statistics', 'graph'], route: '/dashboard?tab=analytics', message: 'Opening Health Analytics...' },
-      { keywords: ['faculty portal', 'faculty', 'teacher', 'sir', 'maam'], route: '/dashboard?tab=faculty-portal', message: 'Opening Faculty Portal...' },
-    ];
-
-    let matchedIntent = null;
-    for (const intent of routeIntents) {
-      if (intent.keywords.some(keyword => text.includes(keyword))) {
-        matchedIntent = intent;
-        break;
-      }
-    }
-
-    if (matchedIntent) {
-      if (matchedIntent.route.includes('/book')) {
-        convStateRef.current = 'ASKING_SYMPTOMS';
-        speak("Sure, I can book an appointment. What is your main medical issue or symptom?");
-        return;
-      }
-      
-      toast.success(`Executing command: ${matchedIntent.message}`, { duration: 4000 });
-      navigate(matchedIntent.route);
-      return;
-    }
-
-    try {
-      toast('Thinking...', { icon: '🤖', id: 'ai-thinking' });
-      const res = await aiAPI.queryChat(text, null);
-      toast.dismiss('ai-thinking');
-      
-      let reply = res.data?.reply || 'Sorry, I couldn\'t process that.';
-      
-      // Remove markdown for speech synthesis
-      const cleanReply = reply.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1');
-      speak(cleanReply);
-      toast.success(cleanReply, { duration: 4000 });
-    } catch (err) {
-      toast.dismiss('ai-thinking');
-      console.error('AI Error:', err);
-      speak("I am having trouble connecting to the server.");
-      toast('Could not connect to AI.', { icon: '⚠️', duration: 3000 });
-    }
+    // 2. Dispatch event to open General Query Bot window and render query steps
+    window.dispatchEvent(new CustomEvent('medastraq_voice_query', { detail: { query: text } }));
   };
 
   const toggleListen = () => {
@@ -208,8 +105,8 @@ export default function VoiceAssistant() {
     }
   };
 
-  return (
-    <div className="voice-assistant-wrapper">
+  return createPortal(
+    <div className={`voice-assistant-wrapper${isPatientDashboard ? ' dashboard-shifted' : ''}`}>
       <button 
         className={`fab-button voice-fab ${isListening ? 'listening' : ''}`}
         onClick={toggleListen}
@@ -218,7 +115,8 @@ export default function VoiceAssistant() {
         {isListening ? <FiMicOff /> : <FiMic />}
       </button>
       {isListening && <div className="voice-fab-pulse"></div>}
-    </div>
+    </div>,
+    document.body
   );
 }
 

@@ -1,4 +1,4 @@
-/* Global Query Chatbot Styles */
+﻿/* Global Query Chatbot Styles */
 
 .global-query-bot-container {
   position: fixed;
@@ -9,9 +9,9 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Shift position on Patient Dashboard to prevent overlapping the clinical bot */
+/* Shift position on Patient Dashboard to sit left of the AI Symptom Checker FAB */
 .global-query-bot-container.dashboard-shifted {
-  right: 276px !important;
+  right: 290px !important;
   bottom: 24px !important;
 }
 
@@ -510,4 +510,122 @@
   color: #64748B;
   box-shadow: none;
   cursor: not-allowed;
+}
+
+/* Proactive Welcome Greeting Bubble */
+.proactive-greeting-bubble {
+  position: absolute;
+  bottom: 74px;
+  right: 0;
+  width: 310px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #D0E4E6;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 16px 36px rgba(214, 83, 19, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 1001;
+  user-select: none;
+}
+
+[data-theme='dark'] .proactive-greeting-bubble {
+  background: rgba(17, 24, 39, 0.95);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f3f4f6;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.greeting-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.greeting-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #d65313;
+}
+
+.greeting-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.greeting-close-btn {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.greeting-close-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #111827;
+}
+
+.greeting-body {
+  font-size: 0.88rem;
+  color: #111827;
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+[data-theme='dark'] .greeting-body {
+  color: #e5e7eb;
+}
+
+.greeting-body p {
+  margin-bottom: 4px;
+}
+
+.greeting-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.greeting-action-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.greeting-action-btn.primary {
+  background: linear-gradient(135deg, #d65313, #e86c30);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(214, 83, 19, 0.25);
+}
+
+.greeting-action-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(214, 83, 19, 0.35);
+}
+
+.greeting-action-btn.secondary {
+  background: #F4F8FB;
+  color: #111827;
+  border: 1px solid #D0E4E6;
+}
+
+.greeting-action-btn.secondary:hover {
+  background: #E8F1F6;
 }

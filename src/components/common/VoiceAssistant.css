@@ -1,4 +1,4 @@
-.voice-assistant-wrapper {
+﻿.voice-assistant-wrapper {
   position: fixed;
   bottom: 24px;
   right: 90px;
@@ -7,6 +7,20 @@
   align-items: center;
   justify-content: center;
 }
+
+/* On dashboard ΓÇö shift left of the GlobalQueryBot which sits at right:290px */
+.voice-assistant-wrapper.dashboard-shifted {
+  right: 358px !important;
+  bottom: 24px !important;
+}
+
+@media (max-width: 1024px) {
+  .voice-assistant-wrapper.dashboard-shifted {
+    right: 90px;
+    bottom: 96px;
+  }
+}
+
 
 .voice-fab {
   width: 52px;
