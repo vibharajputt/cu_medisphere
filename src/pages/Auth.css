@@ -1552,3 +1552,70 @@
   gap: 4px;
 }
 
+/* Custom OTP Animation */
+@keyframes otpPopIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes otpPulseFocus {
+  0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(79, 70, 229, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+}
+
+.otp-box {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.otp-box:focus {
+  transform: translateY(-2px);
+  border-color: #4f46e5;
+  animation: otpPulseFocus 1.5s infinite;
+}
+
+.otp-box.filled {
+  animation: otpPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  border-color: #4f46e5;
+  background: rgba(79, 70, 229, 0.05);
+}
+/* ========================================= */
+/* ?? PREMIUM OTP ANIMATION (Instagram Style) */
+/* ========================================= */
+.magic-otp-box {
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  transform: scale(1) !important;
+  box-shadow: inset 0 0 0 2px transparent !important;
+  position: relative;
+}
+
+.magic-otp-box:focus {
+  transform: scale(1.1) translateY(-4px) !important;
+  border-color: #d65313 !important; /* Theme rust orange */
+  box-shadow: 0 10px 25px -5px rgba(214, 83, 19, 0.4), inset 0 0 0 2px rgba(214, 83, 19, 0.2) !important;
+  background: #ffffff !important;
+  z-index: 10;
+}
+
+/* Typing / Filled state */
+@keyframes instaPop {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  40% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.magic-otp-box.filled {
+  animation: instaPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+  border-color: #10b981 !important; /* Theme emerald green */
+  background: rgba(16, 185, 129, 0.05) !important;
+  color: #10b981 !important;
+  text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3) !important;
+}
+
+.magic-otp-box.verified {
+  transform: scale(1) !important;
+  border-color: #10b981 !important;
+  background: #10b981 !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+}
