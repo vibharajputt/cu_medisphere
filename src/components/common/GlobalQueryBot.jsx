@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -32,7 +32,7 @@ export default function GlobalQueryBot() {
   const [chatHistory, setChatHistory] = useState([
     {
       sender: 'ai',
-      text: '≡ƒæï **Welcome to MedAstraQ!** I am your 24/7 Platform Assistant.\n\nI can help you with:\n- ≡ƒôà [Booking an appointment](/dashboard) with a doctor\n- ≡ƒô¥ [Creating an account](/signup) or [logging in](/login)\n- ≡ƒÆè [Buying & ordering medicines](/my-prescriptions)\n- ≡ƒÄÖ∩╕Å Using AI clinical tools or diagnostic bookings\n- ≡ƒ⌐║ General health and wellness questions\n\n*How can I help you today? You can type your query or click the microphone button next to me to ask with your voice!*'
+      text: '👋 **Welcome to MedAstraQ!** I am your 24/7 Platform Assistant.\n\nI can help you with:\n- 📅 [Booking an appointment](/dashboard) with a doctor\n- 📝 [Creating an account](/signup) or [logging in](/login)\n- 💊 [Buying & ordering medicines](/my-prescriptions)\n- 🎙️ Using AI clinical tools or diagnostic bookings\n- 🩺 General health and wellness questions\n\n*How can I help you today? You can type your query or click the microphone button next to me to ask with your voice!*'
     }
   ]);
   const [sendingChat, setSendingChat] = useState(false);
@@ -50,10 +50,10 @@ export default function GlobalQueryBot() {
                              location.pathname !== '/';
 
   const quickTags = [
-    { label: '≡ƒôà Book Appointment', query: 'How do I book a doctor appointment on the platform?' },
-    { label: '≡ƒô¥ Sign Up Guide', query: 'How can I register an account as a patient or doctor?' },
-    { label: '≡ƒÆè Buy Medicines', query: 'How can I order medicines online using my prescriptions?' },
-    { label: '≡ƒÅå Earn Rewards', query: 'How does the EXP checklist and streak rewards program work?' }
+    { label: '📅 Book Appointment', query: 'How do I book a doctor appointment on the platform?' },
+    { label: '📝 Sign Up Guide', query: 'How can I register an account as a patient or doctor?' },
+    { label: '💊 Buy Medicines', query: 'How can I order medicines online using my prescriptions?' },
+    { label: '🏆 Earn Rewards', query: 'How does the EXP checklist and streak rewards program work?' }
   ];
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function GlobalQueryBot() {
 
     rec.onstart = () => {
       setIsListening(true);
-      toast.success('≡ƒÄÖ∩╕Å Voice assistant listening... Speak now!', { id: 'voice-active' });
+      toast.success('🎙️ Voice assistant listening... Speak now!', { id: 'voice-active' });
     };
 
     rec.onresult = (event) => {
@@ -139,7 +139,7 @@ export default function GlobalQueryBot() {
   };
 
   const handleSendVoiceQuery = (text) => {
-    toast.success(`Captured: "${text}"`, { icon: '≡ƒÄÖ∩╕Å', id: 'voice-captured' });
+    toast.success(`Captured: "${text}"`, { icon: '🎙️', id: 'voice-captured' });
     setChatOpen(true);
     handleSendChat(text);
   };
@@ -196,7 +196,7 @@ export default function GlobalQueryBot() {
       if (matchedRole) {
         setChatHistory(prev => [...prev, { 
           sender: 'ai', 
-          text: `≡ƒöÉ **Logging into ${matchedRole.role} Dashboard...**` 
+          text: `🔐 **Logging into ${matchedRole.role} Dashboard...**` 
         }]);
         logout();
         setTimeout(() => {
@@ -213,7 +213,7 @@ export default function GlobalQueryBot() {
         }, 800);
         return;
       } else {
-        performNavigation('/login', '≡ƒöÉ **Navigating to Login page...**\n\nPlease sign in to access your account.');
+        performNavigation('/login', '🔐 **Navigating to Login page...**\n\nPlease sign in to access your account.');
         return;
       }
     }
@@ -221,40 +221,40 @@ export default function GlobalQueryBot() {
     if (lowerMsg.includes('logout') || lowerMsg.includes('log out') || lowerMsg.includes('sign out')) {
       setChatHistory(prev => [...prev, { 
         sender: 'ai', 
-        text: '≡ƒæï **Logging out...**' 
+        text: '👋 **Logging out...**' 
       }]);
       setTimeout(() => {
         logout();
-        performNavigation('/', '≡ƒÅá **You have been logged out.**');
+        performNavigation('/', '🏠 **You have been logged out.**');
       }, 800);
       return;
     }
     
     const routeIntents = [
-      { keywords: ['about us', 'about', 'who we are', 'jaankari'], route: '/about', message: 'Γä╣∩╕Å **Navigating to About Us page...**\n\nHere you can learn about our campus care mission and team.' },
-      { keywords: ['contact us', 'contact', 'reach us', 'helpline', 'sampark', 'support line'], route: '/contact', message: '≡ƒô₧ **Navigating to Contact Us page...**\n\nHere you can send a message or get campus helpline contact details.' },
-      { keywords: ['signup', 'sign up', 'register', 'create account', 'naya account', 'registration'], route: '/signup', message: '≡ƒô¥ **Navigating to Sign Up page...**\n\nChoose your profile type to register.' },
-      { keywords: ['help center', 'help desk', 'support desk'], route: '/help', message: '≡ƒ¢ƒ **Opening Help Center...**\n\nFind guides, tutorials, and support resources.' },
-      { keywords: ['faq', 'faqs', 'frequently asked', 'sawal'], route: '/faq', message: 'Γ¥ô **Opening FAQs...**\n\nView common questions and answers.' },
-      { keywords: ['emergency', 'sos', 'ambulance', 'urgent'], route: '/emergency', message: '≡ƒÜ¿ **Triggering Emergency Protocols...**\n\nConnecting you with campus emergency care.' },
-      { keywords: ['book appointment', 'doctor appointment', 'book doctor', 'consultation', 'book', 'appointment', 'doctor', 'doctors', 'hospital', 'hospitals', 'booking', 'checkup'], route: '/book/HOS101?autoPilot=true', message: '≡ƒñû **Navigating to Doctor & Hospital Booking...**\n\nSelect a verified doctor or hospital to schedule your appointment.' },
-      { keywords: ['my bookings', 'my appointments', 'schedule', 'booking status'], route: '/my-bookings', message: '≡ƒôà **Opening your Bookings...**' },
-      { keywords: ['prescription', 'prescriptions', 'medicine', 'pharmacy', 'pill', 'dawai', 'order medicine'], route: '/my-prescriptions', message: '≡ƒÆè **Opening your Prescriptions & Order Medicines...**' },
-      { keywords: ['medical leave', 'leave certificate', 'sick leave', 'chutti', 'leave'], route: '/dashboard?tab=medical-leave', message: '≡ƒô¥ **Opening Medical Leave Portal...**' },
-      { keywords: ['symptom checker', 'symptom', 'diagnos', 'bimari', 'health check'], route: '/dashboard?tab=symptom-checker', message: '≡ƒ⌐║ **Opening AI Symptom Checker...**' },
-      { keywords: ['dashboard', 'my profile', 'portal', 'home page', 'main page'], route: '/dashboard', message: '≡ƒÅá **Taking you to your Dashboard...**' },
-      { keywords: ['vaccination', 'vaccine', 'immunization', 'tika'], route: '/dashboard?tab=vaccinations', message: '≡ƒÆë **Opening Vaccination Records...**' },
-      { keywords: ['wellness score', 'wellbeing'], route: '/dashboard?tab=wellness-score', message: '≡ƒºÿΓÇìΓÖÇ∩╕Å **Checking your Wellness Score...**' },
-      { keywords: ['health map', 'map', 'nearby', 'location', 'rasta'], route: '/dashboard?tab=health-map', message: '≡ƒù║∩╕Å **Opening the Health Map...**' },
-      { keywords: ['care plan', 'care'], route: '/dashboard?tab=care-plan', message: '≡ƒôï **Opening your Personalized Care Plan...**' },
-      { keywords: ['complementary checkup', 'free checkup', 'full body checkup'], route: '/dashboard?tab=full-body-checkup', message: '≡ƒÄü **Opening Complementary Checkup...**' },
-      { keywords: ['rewards', 'points', 'leaderboard', 'rank'], route: '/dashboard?tab=rewards', message: '≡ƒÅå **Opening Rewards Leaderboard...**' },
-      { keywords: ['refer', 'referral', 'invite dost'], route: '/dashboard?tab=refer-a-student', message: '≡ƒñ¥ **Opening Student Referral...**' },
-      { keywords: ['student health portal', 'health portal'], route: '/dashboard?tab=student-health-portal', message: '≡ƒÄô **Opening Student Health Portal...**' },
-      { keywords: ['wellness center', 'mental health', 'counselor', 'stress'], route: '/dashboard?tab=wellness-center', message: '≡ƒÆå **Opening Wellness Center...**' },
-      { keywords: ['medicine trends', 'trend'], route: '/dashboard?tab=medicine-trends', message: '≡ƒôê **Opening Medicine Trends...**' },
-      { keywords: ['analytics', 'stats', 'statistics', 'graph'], route: '/dashboard?tab=analytics', message: '≡ƒôè **Opening Health Analytics...**' },
-      { keywords: ['faculty portal', 'faculty', 'teacher'], route: '/dashboard?tab=faculty-portal', message: '≡ƒæ⌐ΓÇì≡ƒÅ½ **Opening Faculty Portal...**' },
+      { keywords: ['about us', 'about', 'who we are', 'jaankari'], route: '/about', message: 'ℹ️ **Navigating to About Us page...**\n\nHere you can learn about our campus care mission and team.' },
+      { keywords: ['contact us', 'contact', 'reach us', 'helpline', 'sampark', 'support line'], route: '/contact', message: '📞 **Navigating to Contact Us page...**\n\nHere you can send a message or get campus helpline contact details.' },
+      { keywords: ['signup', 'sign up', 'register', 'create account', 'naya account', 'registration'], route: '/signup', message: '📝 **Navigating to Sign Up page...**\n\nChoose your profile type to register.' },
+      { keywords: ['help center', 'help desk', 'support desk'], route: '/help', message: '🛟 **Opening Help Center...**\n\nFind guides, tutorials, and support resources.' },
+      { keywords: ['faq', 'faqs', 'frequently asked', 'sawal'], route: '/faq', message: '❓ **Opening FAQs...**\n\nView common questions and answers.' },
+      { keywords: ['emergency', 'sos', 'ambulance', 'urgent'], route: '/emergency', message: '🚨 **Triggering Emergency Protocols...**\n\nConnecting you with campus emergency care.' },
+      { keywords: ['book appointment', 'doctor appointment', 'book doctor', 'consultation', 'book', 'appointment', 'doctor', 'doctors', 'hospital', 'hospitals', 'booking', 'checkup'], route: '/book/HOS101?autoPilot=true', message: '🤖 **Navigating to Doctor & Hospital Booking...**\n\nSelect a verified doctor or hospital to schedule your appointment.' },
+      { keywords: ['my bookings', 'my appointments', 'schedule', 'booking status'], route: '/my-bookings', message: '📅 **Opening your Bookings...**' },
+      { keywords: ['prescription', 'prescriptions', 'medicine', 'pharmacy', 'pill', 'dawai', 'order medicine'], route: '/my-prescriptions', message: '💊 **Opening your Prescriptions & Order Medicines...**' },
+      { keywords: ['medical leave', 'leave certificate', 'sick leave', 'chutti', 'leave'], route: '/dashboard?tab=medical-leave', message: '📝 **Opening Medical Leave Portal...**' },
+      { keywords: ['symptom checker', 'symptom', 'diagnos', 'bimari', 'health check'], route: '/dashboard?tab=symptom-checker', message: '🩺 **Opening AI Symptom Checker...**' },
+      { keywords: ['dashboard', 'my profile', 'portal', 'home page', 'main page'], route: '/dashboard', message: '🏠 **Taking you to your Dashboard...**' },
+      { keywords: ['vaccination', 'vaccine', 'immunization', 'tika'], route: '/dashboard?tab=vaccinations', message: '💉 **Opening Vaccination Records...**' },
+      { keywords: ['wellness score', 'wellbeing'], route: '/dashboard?tab=wellness-score', message: '🧘‍♀️ **Checking your Wellness Score...**' },
+      { keywords: ['health map', 'map', 'nearby', 'location', 'rasta'], route: '/dashboard?tab=health-map', message: '🗺️ **Opening the Health Map...**' },
+      { keywords: ['care plan', 'care'], route: '/dashboard?tab=care-plan', message: '📋 **Opening your Personalized Care Plan...**' },
+      { keywords: ['complementary checkup', 'free checkup', 'full body checkup'], route: '/dashboard?tab=full-body-checkup', message: '🎁 **Opening Complementary Checkup...**' },
+      { keywords: ['rewards', 'points', 'leaderboard', 'rank'], route: '/dashboard?tab=rewards', message: '🏆 **Opening Rewards Leaderboard...**' },
+      { keywords: ['refer', 'referral', 'invite dost'], route: '/dashboard?tab=refer-a-student', message: '🤝 **Opening Student Referral...**' },
+      { keywords: ['student health portal', 'health portal'], route: '/dashboard?tab=student-health-portal', message: '🎓 **Opening Student Health Portal...**' },
+      { keywords: ['wellness center', 'mental health', 'counselor', 'stress'], route: '/dashboard?tab=wellness-center', message: '💆 **Opening Wellness Center...**' },
+      { keywords: ['medicine trends', 'trend'], route: '/dashboard?tab=medicine-trends', message: '📈 **Opening Medicine Trends...**' },
+      { keywords: ['analytics', 'stats', 'statistics', 'graph'], route: '/dashboard?tab=analytics', message: '📊 **Opening Health Analytics...**' },
+      { keywords: ['faculty portal', 'faculty', 'teacher'], route: '/dashboard?tab=faculty-portal', message: '👩‍🏫 **Opening Faculty Portal...**' },
     ];
 
     let matchedIntent = null;
@@ -277,7 +277,7 @@ export default function GlobalQueryBot() {
           setChatHistory(prev => [...prev, { sender: 'ai', text: reply }]);
         } catch (err) {
           console.error(err);
-          setChatHistory(prev => [...prev, { sender: 'ai', text: 'ΓÜá∩╕Å **Error:** Failed to compute offline reply.' }]);
+          setChatHistory(prev => [...prev, { sender: 'ai', text: '⚠️ **Error:** Failed to compute offline reply.' }]);
         } finally {
           setSendingChat(false);
         }
@@ -294,7 +294,7 @@ export default function GlobalQueryBot() {
       setChatHistory(prev => [...prev, { sender: 'ai', text: reply }]);
     } catch (err) {
       console.error(err);
-      setChatHistory(prev => [...prev, { sender: 'ai', text: 'ΓÜá∩╕Å **Connection Error:** Could not connect to Astra. Please make sure the backend server is running and try again.' }]);
+      setChatHistory(prev => [...prev, { sender: 'ai', text: '⚠️ **Connection Error:** Could not connect to Astra. Please make sure the backend server is running and try again.' }]);
     } finally {
       setSendingChat(false);
     }
@@ -313,7 +313,7 @@ export default function GlobalQueryBot() {
     setChatHistory([
       {
         sender: 'ai',
-        text: '≡ƒæï **Session reset!** How can I assist you with MedAstraQ platform queries or wellness support?'
+        text: '👋 **Session reset!** How can I assist you with MedAstraQ platform queries or wellness support?'
       }
     ]);
   };
@@ -415,7 +415,7 @@ export default function GlobalQueryBot() {
       {isListening && (
         <div className="voice-listening-toast">
           <div className="mic-pulse-ring"></div>
-          <span>≡ƒÄÖ∩╕Å Listening to your query...</span>
+          <span>🎙️ Listening to your query...</span>
         </div>
       )}
 
@@ -444,7 +444,7 @@ export default function GlobalQueryBot() {
             </div>
             
             <div className="greeting-body">
-              <p>≡ƒæï <strong>Greetings! Welcome to MedAstraQ.</strong></p>
+              <p>👋 <strong>Greetings! Welcome to MedAstraQ.</strong></p>
               <p>How can I assist you today? Ask any query or try voice commands!</p>
             </div>
 
@@ -453,13 +453,13 @@ export default function GlobalQueryBot() {
                 className="greeting-action-btn primary"
                 onClick={() => { setShowGreeting(false); setChatOpen(true); }}
               >
-                ≡ƒÆ¼ Start Chat
+                💬 Start Chat
               </button>
               <button 
                 className="greeting-action-btn secondary"
                 onClick={() => { setShowGreeting(false); handleSendChat('book appointment'); }}
               >
-                ≡ƒôà Book Doctor
+                📅 Book Doctor
               </button>
             </div>
           </motion.div>

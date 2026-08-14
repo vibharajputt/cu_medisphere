@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -54,7 +54,7 @@ export default function VoiceAssistant() {
 
     recognition.onstart = () => {
       setIsListening(true);
-      toast('Listening...', { icon: '≡ƒÄñ', duration: 2000 });
+      toast('Listening...', { icon: '🎤', duration: 2000 });
     };
 
     recognition.onresult = (event) => {
@@ -85,7 +85,7 @@ export default function VoiceAssistant() {
       window.speechSynthesis.cancel();
     }
 
-    toast.success(`≡ƒÄÖ∩╕Å Heard: "${text}"`, { duration: 3000, icon: '≡ƒÄñ' });
+    toast.success(`🎙️ Heard: "${text}"`, { duration: 3000, icon: '🎤' });
 
     // 2. Dispatch event to open General Query Bot window and render query steps
     window.dispatchEvent(new CustomEvent('medastraq_voice_query', { detail: { query: text } }));
